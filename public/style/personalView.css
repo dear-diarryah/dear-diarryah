@@ -1,3 +1,11 @@
+
+@font-face {
+    font-family: 'ivan2';
+    src: url('/fonts/Borel-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
 body {
     display: grid;
     grid-template-areas:
@@ -8,22 +16,13 @@ body {
     grid-template-columns: 192px auto;
     height: 100vh;
     margin: 0;
-    background-color: #fbe3d6;
+    background-image: linear-gradient(rgba(4,9,39,0.7),rgba(4,9,39,0.7)), url(/images/diaryBG.png);
+    background-position: center;
+    background-size: cover;
+    position: relative;
+    font-family:'ivan2';
+    color:#fff;
     
-}
-
-@font-face {
-    font-family: 'ivan';
-    src: url('/fonts/MilkyWalky-Regular.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'ivan2';
-    src: url('/fonts/Borel-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
 }
 
 header {
@@ -32,12 +31,18 @@ header {
     display:flex;
     justify-content: center;
     align-items: center;
-    background-color: #f4a48b;
-    background: linear-gradient(to bottom, #F4A48B 17%, #FBE3D6 100%);
     font-family:'ivan2';
-    font-size: 25px;
+    color:#fff;
     
     /* todo: window expands the view, e.g. set size to 60px, it overexceeds the screen on top */
+}
+
+.headerTitle {
+    color:#fff;
+    font-size: 55px;
+    text-align: center;
+    margin-top: 10vh;
+
 }
 
 
@@ -45,11 +50,9 @@ header {
 nav {
     grid-area: n;
     width: 192px;
-    background-color: #fbe3d6; /* Dark background for the nav area */
     border:none;
     border-radius: 15px;
-   /* box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3); /* Shadow for 3D effect */
-   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;;
     margin: 10px;
     display: flex;
     flex-direction: column;
@@ -75,8 +78,7 @@ nav .nav-item a {
     width: 69%; /* Adjust width to fill the parent container */
     padding: 30px;
     text-decoration: none; /* Removes underline */
-    color: black; /* Text color */
-    background-color: #fbe3d6; /* Background color */
+    color: #fff; /* Text color */
     text-align: center; /* Centers text in the navigation link */
     transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effect */
 }
@@ -153,26 +155,105 @@ main {
     justify-content: center;
     align-items: center;
     overflow-y: auto;
-    background-color: #fbe3d6;
     border: none;     
     border-radius: 15px;           
     box-sizing: border-box;
     margin: 10px;
     margin-left: 20px;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    font-family: 'Courier New', Courier, monospace;
 }
 
-/* box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.3); /* Shadow for 3D effect */
+
+#postContainer {
+    width: 87%;
+    height: 100%;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+}
+
+.post {
+    width: 90%;
+    background-color: #f0f2f5;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 10px;
+}
+
+.post h3 {
+    color: #4a4a4a;
+    font-family: 'ivan2';
+}
+
+.post p {
+    color: #595959;
+}
+
+.post:hover {
+    background-color: #dddddd; /* Background color on hover */
+    color: orange; /* Text color on hover */
+    cursor: pointer; /* Changes cursor to pointer to indicate it's clickable */
+
+}
+#addEntryButton {
+    display: block;
+    margin: 10px auto;
+    padding: 8px 20px;
+    font-size: 18px;
+    font-family:'Courier New', Courier, monospace;
+    cursor: pointer;
+    background-color: aquamarine;
+    color: black;
+    border: none;
+    border-radius: 12px;
+    text-align: center;
+
+}
+
+#addEntryButton:hover {
+    background-color: orange;
+    color: white;
+}
+
+.positiveVoteButton, .negativeVoteButton {
+    padding: 5px 15px;
+    margin-left: 8px; /* Space between buttons */
+    font-size: 16px;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.positiveVoteButton {
+    background-color: #0084ff9f;
+}
+
+.positiveVoteButton:hover {
+    background-color: #0051ff;
+}
+
+.negativeVoteButton {
+    background-color: #f552529f;
+}
+
+.negativeVoteButton:hover {
+    background-color: #ff0000;
+}
+
 footer {
     grid-area: f;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #f4a48b;
-    background: linear-gradient(to top, #F4A48B 17%, #FBE3D6 100%);
-    font-family: sans-serif;
+    font-family: 'Courier New', Courier, monospace;
     font-size: small;
+    color: #fff;
 }
 
 footer ul {
