@@ -9,17 +9,96 @@ body {
     height: 100vh;
     margin: 0;
     background-color: #fbe3d6;
+    
+}
+
+@font-face {
+    font-family: 'ivan';
+    src: url('/fonts/MilkyWalky-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'ivan2';
+    src: url('/fonts/Borel-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
 }
 
 header {
     grid-area: h;
     width: 100%;
-    display: flex;
+    display:flex;
     justify-content: center;
     align-items: center;
     background-color: #f4a48b;
+    background: linear-gradient(to bottom, #F4A48B 17%, #FBE3D6 100%);
+    font-family:'ivan2';
+    font-size: 25px;
+    
+    /* todo: window expands the view, e.g. set size to 60px, it overexceeds the screen on top */
 }
 
+
+
+nav {
+    grid-area: n;
+    width: 192px;
+    background-color: #fbe3d6; /* Dark background for the nav area */
+    border:none;
+    border-radius: 15px;
+   /* box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3); /* Shadow for 3D effect */
+   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: calc(100% - 20px);
+    font-family: 'ivan2';
+    font-size: 24px;
+    
+}
+
+/* Styling for the navigation list */
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    width: 100%; /* Adjust width to fill nav */
+}
+
+/* Styling for each navigation item */
+nav .nav-item a {
+    display: block;
+    width: 69%; /* Adjust width to fill the parent container */
+    padding: 30px;
+    text-decoration: none; /* Removes underline */
+    color: black; /* Text color */
+    background-color: #fbe3d6; /* Background color */
+    text-align: center; /* Centers text in the navigation link */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effect */
+}
+
+/* Hover effects for each navigation item */
+.nav-item a:hover {
+    background-color: aquamarine; /* Background color on hover */
+    color: orange; /* Text color on hover */
+    cursor: pointer; /* Changes cursor to pointer to indicate it's clickable */
+}
+
+#logo {
+    max-height: 90px;  /* Adjust the height to fit your nav */
+    width: auto;  /* Maintains the aspect ratio of the image */
+    display: block;  /* Ensures the logo is properly aligned */
+    margin: 0 auto;  /* Centers the logo in the list item */
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+
+/*
 nav {
     grid-area: n;
     width: 192px;
@@ -33,7 +112,35 @@ nav {
     border-radius: 15px;           
     box-sizing: border-box; 
     margin: 10px;
+    
+    
 }
+nav ul {
+
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 192px;
+    height: 50%;
+    
+    overflow: auto;
+}
+
+nav .nav-item a {
+    display: block;
+    width: 170px;
+    background-color: #000000;
+    color: white; 
+    text-decoration: none; 
+    padding: 10px; 
+
+.nav-item a:hover {
+    background-color: aquamarine;
+    color: orange;
+}
+
+*/
+
 
 main {
     grid-area: m;
@@ -44,13 +151,15 @@ main {
     align-items: center;
     overflow-y: auto;
     background-color: #fbe3d6;
-    border: 2px solid black;       
+    border: none;     
     border-radius: 15px;           
     box-sizing: border-box;
     margin: 10px;
     margin-left: 20px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;;
 }
 
+/* box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.3); /* Shadow for 3D effect */
 footer {
     grid-area: f;
     width: 100%;
@@ -58,10 +167,21 @@ footer {
     justify-content: center;
     align-items: center;
     background-color: #f4a48b;
+    background: linear-gradient(to top, #F4A48B 17%, #FBE3D6 100%);
+    font-family: sans-serif;
+    font-size: small;
 }
 
-footer > ul {
+footer ul {
     display: flex;
     justify-content: center;
     column-gap: 24px;
+    list-style-type: none;
 }
+
+.footer-item a {
+    color: white; /* Add text color */
+    text-decoration: none; /* Remove underline */
+    padding: 10px; /* Add padding */
+}
+

@@ -1,6 +1,7 @@
 window.onload = function () {
     const listNavElement = document.querySelector("nav");
 
+    /*
     // Home Button
     const homeBtn = document.createElement('button');
     homeBtn.textContent = 'Home';
@@ -20,6 +21,18 @@ window.onload = function () {
     const logoutBtn = document.createElement('button');
     logoutBtn.textContent = 'Logout';
     listNavElement.appendChild(logoutBtn);
+*/
+
+    //const navListElements = document.querySelector('nav');
+
+    const navList = document.getElementById('navList');
+
+    const navListItems = navList.getElementsByTagName('li');
+    Array.from(navListItems).forEach(function(item) {
+        item.addEventListener("click", function() {
+            console.log("Navigating to: " + this.textContent);
+        })
+    })
 
     
 };
