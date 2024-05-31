@@ -23,7 +23,7 @@ header {
 nav {
     grid-area: n;
     width: 192px;
-    height: 100%;
+    height: auto;
     background-color: #fbe3d6;
     display: flex;
     flex-direction: column;
@@ -32,17 +32,23 @@ nav {
     border: 2px solid black;       
     border-radius: 15px;           
     box-sizing: border-box; 
+    margin: 10px;
 }
 
 main {
     grid-area: m;
-    width: 100%;
-    height: 100%;
+    width: auto;
+    height: auto;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow-y: auto;
     background-color: #fbe3d6;
+    border: 2px solid black;       
+    border-radius: 15px;           
+    box-sizing: border-box;
+    margin: 10px;
+    margin-left: 20px;
 }
 
 footer {
