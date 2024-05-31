@@ -1,6 +1,16 @@
 window.onload = function () {
     const listElement = document.querySelector("main");
 
+    //Dear Diarryah Header Item
+    const welcomeHeader = document.createElement('h1');
+    welcomeHeader.textContent = "Dear Diarryah";
+    listElement.appendChild(welcomeHeader);
+
+    //Body Welcome Text paragraph
+    const welcomeText = document.createElement('p');
+    welcomeText.textContent = 'A place for you to write your pets diary and track its health status.';
+    listElement.appendChild(welcomeText);
+
     // Sign Up Button
     const signUpBtn = document.createElement('button');
     signUpBtn.textContent = 'Sign Up';

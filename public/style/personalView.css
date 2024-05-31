@@ -88,6 +88,9 @@ nav .nav-item a {
     cursor: pointer; /* Changes cursor to pointer to indicate it's clickable */
 }
 
+
+
+
 #logo {
     max-height: 90px;  /* Adjust the height to fit your nav */
     width: auto;  /* Maintains the aspect ratio of the image */
