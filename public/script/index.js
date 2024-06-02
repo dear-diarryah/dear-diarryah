@@ -13,9 +13,11 @@ document.getElementById('signUpForm').addEventListener('submit', async function(
       body: JSON.stringify({ username, email, password })
     });
     const data = await response.json();
+    console.log(response)
     if (data.auth) {
       alert('Registration successful');
-      // TODO: Speichern des Tokens oder Weiterleitung zur Anmeldeseite
+      localStorage.setItem('token', data.token);
+      window.location.href = '/personalView.html';
     } else {
       alert('Registration failed');
     }
@@ -40,8 +42,8 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
     const data = await response.json();
     if (data.auth) {
       alert('Login successful');
-      console.log(data.entries);
-      // TODO: Speichern des Tokens oder Weiterleitung zur Hauptseite
+      localStorage.setItem('token', data.token);
+      window.location.href = '/personalView.html';
     } else {
       alert('Login failed');
     }
