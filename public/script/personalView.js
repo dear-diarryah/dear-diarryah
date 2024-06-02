@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   const token = localStorage.getItem("token");
   if (!token) {
     alert("No token found, please log in first.");
-    window.location.href = "/login.html";
+    window.location.href = "/";
     return;
   }
   try {

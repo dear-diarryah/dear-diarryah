@@ -1,9 +1,15 @@
 document.addEventListener("DOMContentLoaded", function () {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        alert("No token found, please log in first.");
+        window.location.href = "/";
+        return;
+    }
+
     document.getElementById("diaryForm").addEventListener("submit", async function (event) {
         event.preventDefault();
         const title = document.getElementById("titleInput").value;
         const content = document.getElementById("contentTextarea").value;
-        const token = localStorage.getItem("token");
 
         try {
             const response = await fetch("/postEntry", {
