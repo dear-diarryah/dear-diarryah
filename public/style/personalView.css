@@ -218,7 +218,7 @@ main {
     color: white;
 }
 
-.positiveVoteButton, .negativeVoteButton {
+.positiveVoteButton, .negativeVoteButton , .deleteEntry {
     padding: 5px 15px;
     margin-left: 8px; /* Space between buttons */
     font-size: 16px;
@@ -243,6 +243,14 @@ main {
 
 .negativeVoteButton:hover {
     background-color: #ff0000;
+}
+
+.deleteEntry {
+    background-color: #6a6a6a9f;
+}
+
+.deleteEntry:hover {
+    background-color: #212121;
 }
 
 footer {

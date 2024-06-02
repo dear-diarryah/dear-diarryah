@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
             const data = await response.json();
             if (response.ok) {
-                alert("Entry posted successfully");
+                // alert("Entry posted successfully");
                 window.location.href = "/personalView.html";
             } else {
                 alert("Failed to post entry");
@@ -30,8 +30,15 @@ document.addEventListener("DOMContentLoaded", function () {
         } catch (error) {
             console.error("Error:", error);
         }
-        });
     });
+
+    document.getElementById("logoutButton").addEventListener("click", function (event) {
+        event.preventDefault();
+        localStorage.removeItem("token");
+        // alert("Logged out successfully");
+        window.location.href = "/";
+    });
+});
 
 window.onload = function () {
     // const sliderContainer = document.querySelector("#sliderContainer");
@@ -86,4 +93,4 @@ window.onload = function () {
     //      alert('Submit Clicked!');
     //      // Implement the action for the submit button
     //  });
-    };
+};

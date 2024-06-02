@@ -2,12 +2,6 @@ window.onload = function () {
   const listNavElement = document.querySelector("nav");
 };
 
-const postData = [
-  { title: "Megi Voj.", content: "Ich liebe Sammy" },
-  { title: "Ivan B.", content: "Ich liebe meine Frau." },
-  { title: "Post C", content: "Test" },
-];
-
 document.addEventListener("DOMContentLoaded", async function () {
   const token = localStorage.getItem("token");
   if (!token) {
@@ -35,6 +29,13 @@ document.addEventListener("DOMContentLoaded", async function () {
     console.error("Error:", error);
     alert("Failed to fetch entries");
   }
+
+  document.getElementById("logoutButton").addEventListener("click", function (event) {
+    event.preventDefault(); // Verhindert das Standardverhalten des Links
+    localStorage.removeItem("token"); // Entfernt den Token aus dem LocalStorage
+    // alert("Logged out successfully");
+    window.location.href = "/"; // Weiterleitung zur Login-Seite
+  });
 });
 
 function displayEntries(entries) {
@@ -43,31 +44,55 @@ function displayEntries(entries) {
   entries.forEach((post) => {
     const postElement = document.createElement("div");
     postElement.classList.add("post");
-    postElement.innerHTML = `
-            <h3>${post.title}</h3>
-            <p>${post.content}</p>
-        `;
+    postElement.innerHTML = `<h3>${post.title}</h3><p>${post.content}</p>`;
     postContainer.appendChild(postElement);
-    // Create Like button
+
     const positiveVote = document.createElement("button");
     positiveVote.classList.add("positiveVoteButton");
     positiveVote.textContent = "Helpful";
-    // Create Dislike button
+    postElement.appendChild(positiveVote);
+    positiveVote.addEventListener("click", function () {
+      alert("Thanks for voting!");
+    });
+
     const negativeVote = document.createElement("button");
     negativeVote.classList.add("negativeVoteButton");
     negativeVote.textContent = "Dislike";
-    postElement.appendChild(positiveVote);
     postElement.appendChild(negativeVote);
-    // Event listener for the new entry button
-    positiveVote.addEventListener("click", function () {
-      alert("Thanks for voting!");
-      // Here you can add functionality to open a form for entering new post data
-    });
-    // Event listener for the new entry button
     negativeVote.addEventListener("click", function () {
       alert("Thanks for voting!");
-      // Here you can add functionality to open a form for entering new post data
     });
+
+    const deleteEntry = document.createElement("button");
+    deleteEntry.classList.add("deleteEntry");
+    deleteEntry.textContent = "Delete Entry";
+    postElement.appendChild(deleteEntry);
+    deleteEntry.addEventListener("click", async function(event) {
+      event.preventDefault();
+      const entryId = post.id;
+      const token = localStorage.getItem("token");
+
+      try {
+        const response = await fetch("/deleteEntry", {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "x-access-token": token,
+          },
+          body: JSON.stringify({ entryId }),
+        });
+
+        if (response.ok) {
+          // alert("Entry deleted successfully");
+          location.reload();
+        } else {
+          const data = await response.json();
+          alert(data.message || "Failed to delete entry");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    })
   });
 
   const addButton = document.createElement("button");

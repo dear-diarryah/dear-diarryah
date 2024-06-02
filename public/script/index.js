@@ -13,9 +13,8 @@ document.getElementById("signUpForm").addEventListener("submit", async function 
         body: JSON.stringify({ username, email, password }),
       });
       const data = await response.json();
-      console.log(response);
       if (data.auth) {
-        alert("Registration successful");
+        // alert("Registration successful");
         localStorage.setItem("token", data.token);
         window.location.href = "/personalView.html";
       } else {
@@ -41,7 +40,7 @@ document.getElementById("loginForm").addEventListener("submit", async function (
       });
       const data = await response.json();
       if (data.auth) {
-        alert("Login successful");
+        // alert("Login successful");
         localStorage.setItem("token", data.token);
         window.location.href = "/personalView.html";
       } else {

@@ -73,7 +73,6 @@ app.get("/getEntries", verifyToken, (req, res) => {
 });
 
 app.post('/postEntry', verifyToken, (req, res) => {
-  console.log(req);
   const { title, content } = req.body;
   const userId = req.userId;
   db.run("INSERT INTO entries (user_id, title, content) VALUES (?, ?, ?)", [userId, title, content], function(err) {
@@ -81,6 +80,20 @@ app.post('/postEntry', verifyToken, (req, res) => {
       return res.status(500).send("Error posting entry");
     }
     res.status(200).send({ message: 'Entry posted successfully' });
+  });
+});
+
+app.delete('/deleteEntry', verifyToken, (req, res) => {
+  const { entryId } = req.body;
+
+  db.run("DELETE FROM entries WHERE id = ? AND user_id = ?", [entryId, req.userId], function(err) {
+    if (err) {
+      return res.status(500).send('Error deleting entry');
+    }
+    if (this.changes === 0) {
+      return res.status(404).send('Entry not found or not authorized');
+    }
+    res.status(200).send('Entry deleted successfully');
   });
 });
 
