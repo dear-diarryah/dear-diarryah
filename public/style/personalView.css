@@ -269,7 +269,7 @@ footer ul {
     padding: 10px; /* Add padding */
 }
 
-#sliderContainer .slidersWrapper {
+#diaryForm {
     padding: 20px;
     margin: 20px auto;
     border: 1px solid #ccc;
@@ -279,23 +279,27 @@ footer ul {
     width: 100vh;
 }
 
-#sliderContainer textarea {
+#diaryForm input {
     width: 100vh;
     margin-top: 20px;
     padding: 10px;
     box-sizing: border-box; 
 }
 
-#sliderContainer button {
+#diaryForm textarea {
+    width: 100vh;
+    margin-top: 20px;
+    padding: 10px;
+    box-sizing: border-box; 
+}
+
+#diaryForm button {
     padding: 10px 20px;
     margin-right: 10px;
     font-size: 16px;
     cursor: pointer;
     border-radius: 5px;
     border: none;
-}
-
-#submitButton {
     background-color: #4CAF50;
     color: white;
 }

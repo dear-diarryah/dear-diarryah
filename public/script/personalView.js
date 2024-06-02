@@ -1,100 +1,83 @@
 window.onload = function () {
-    const listNavElement = document.querySelector("nav");
-
-    /*
-    // Home Button
-    const homeBtn = document.createElement('button');
-    homeBtn.textContent = 'Home';
-    listNavElement.appendChild(homeBtn);
-
-    // Diary Button
-    const diaryBtn = document.createElement('button');
-    diaryBtn.textContent = 'Diary';
-    listNavElement.appendChild(diaryBtn);
-
-    // Health Button
-    const healthBtn = document.createElement('button');
-    healthBtn.textContent = 'Health';
-    listNavElement.appendChild(healthBtn);
-
-    // Diary Button
-    const logoutBtn = document.createElement('button');
-    logoutBtn.textContent = 'Logout';
-    listNavElement.appendChild(logoutBtn);
-*/
-
-    //const navListElements = document.querySelector('nav');
-
-    
+  const listNavElement = document.querySelector("nav");
 };
 
 const postData = [
-    { title: "Megi Voj.", content: "Ich liebe Sammy" },
-    { title: "Ivan B.", content: "Ich liebe meine Frau." },
-    { title: "Post C", content: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. " + "23#" +
-    "Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, nos" }
+  { title: "Megi Voj.", content: "Ich liebe Sammy" },
+  { title: "Ivan B.", content: "Ich liebe meine Frau." },
+  { title: "Post C", content: "Test" },
 ];
 
+document.addEventListener("DOMContentLoaded", async function () {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    alert("No token found, please log in first.");
+    window.location.href = "/login.html";
+    return;
+  }
+  try {
+    const response = await fetch("/getEntries", {
+      method: "GET",
+      headers: {
+        "x-access-token": token,
+        "Content-Type": "application/json",
+      },
+    });
 
-document.addEventListener('DOMContentLoaded', function() {
-const postContainer = document.getElementById('postContainer');
+    if (!response.ok) {
+      throw new Error("Failed to fetch entries");
+    }
+    const data = await response.json();
+    const entries = data.entries;
 
-postData.forEach(post => {
-    const postElement = document.createElement('div');
-    postElement.classList.add('post');
-    postElement.innerHTML= `
-        <h3>${post.title}</h3>
-        <p>${post.content}</p>
-    `;
+    displayEntries(entries);
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Failed to fetch entries");
+  }
+});
+
+function displayEntries(entries) {
+  const postContainer = document.getElementById("postContainer");
+
+  entries.forEach((post) => {
+    const postElement = document.createElement("div");
+    postElement.classList.add("post");
+    postElement.innerHTML = `
+            <h3>${post.title}</h3>
+            <p>${post.content}</p>
+        `;
     postContainer.appendChild(postElement);
-
     // Create Like button
-    const positiveVote = document.createElement('button');
-    positiveVote.classList.add('positiveVoteButton');
-    positiveVote.textContent = 'Helpful';
-
+    const positiveVote = document.createElement("button");
+    positiveVote.classList.add("positiveVoteButton");
+    positiveVote.textContent = "Helpful";
     // Create Dislike button
-    const negativeVote = document.createElement('button');
-    negativeVote.classList.add('negativeVoteButton');
-    negativeVote.textContent = 'Dislike';
-
-
+    const negativeVote = document.createElement("button");
+    negativeVote.classList.add("negativeVoteButton");
+    negativeVote.textContent = "Dislike";
     postElement.appendChild(positiveVote);
     postElement.appendChild(negativeVote);
-
-
     // Event listener for the new entry button
-    positiveVote.addEventListener('click', function() {
-    alert('Thanks for voting!');
-    // Here you can add functionality to open a form for entering new post data
-});
+    positiveVote.addEventListener("click", function () {
+      alert("Thanks for voting!");
+      // Here you can add functionality to open a form for entering new post data
+    });
+    // Event listener for the new entry button
+    negativeVote.addEventListener("click", function () {
+      alert("Thanks for voting!");
+      // Here you can add functionality to open a form for entering new post data
+    });
+  });
 
-// Event listener for the new entry button
-    negativeVote.addEventListener('click', function() {
-    alert('Thanks for voting!');
-    // Here you can add functionality to open a form for entering new post data
-});
-
-    
-});
-
-const addButton = document.createElement('button');
-    addButton.textContent = 'Create New';
-    addButton.id = 'addEntryButton'; // ID for styling and event handling
-    postContainer.appendChild(addButton);
-
-  // Event listener for the new entry button
-  addButton.addEventListener('click', function() {
-    alert('Add button clicked! Implement the functionality to create a new entry.');
-    // Here you can add functionality to open a form for entering new post data
-});
-
-});
-
-
-
-
-
+  const addButton = document.createElement("button");
+  addButton.textContent = "Create New";
+  addButton.id = "addEntryButton"; // ID for styling and event handling
+  postContainer.appendChild(addButton);
+  addButton.addEventListener("click", function () {
+    window.location.href = "/diary.html";
+  });
+}
 
 //TODO - create function that automatically adds most recent 3 posts - facebook style
 /*
@@ -122,7 +105,5 @@ function appendMovie(movie, element) {
           .append(new ListBuilder().items(movie.Actors))
           .appendTo(element);
 }
-
 */
-
 //post element
