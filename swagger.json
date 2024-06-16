@@ -1,137 +1,142 @@
 {
-    "swagger": "2.0",
-    "info": {
-      "version": "1.0.0",
-      "title": "API Documentation",
-      "description": "API Documentation for your application"
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Dear Diarryah - API Documentation",
+    "description": "API Documentation for Dear Diarryah"
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "schemes": ["http"],
+  "paths": {
+    "/signUp": {
+      "post": {
+        "tags" : ["Authentication"],
+        "summary": "Register a new user",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": { "type": "string" },
+                "email": { "type": "string" },
+                "password": { "type": "string" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Successful registration" },
+          "500": { "description": "Error registering new user" }
+        }
+      }
     },
-    "host": "localhost:3000",
-    "basePath": "/",
-    "schemes": ["http"],
-    "paths": {
-      "/signUp": {
-        "post": {
-          "summary": "Register a new user",
-          "parameters": [
-            {
-              "name": "body",
-              "in": "body",
-              "required": true,
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "username": { "type": "string" },
-                  "email": { "type": "string" },
-                  "password": { "type": "string" }
-                }
+    "/login": {
+      "post": {
+        "tags" : ["Authentication"],
+        "summary": "Login a user",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": { "type": "string" },
+                "password": { "type": "string" }
               }
             }
-          ],
-          "responses": {
-            "200": { "description": "Successful registration" },
-            "500": { "description": "Error registering new user" }
           }
+        ],
+        "responses": {
+          "200": { "description": "Successful login" },
+          "401": { "description": "Invalid credentials" },
+          "500": { "description": "Error on the server" }
         }
-      },
-      "/login": {
-        "post": {
-          "summary": "Login a user",
-          "parameters": [
-            {
-              "name": "body",
-              "in": "body",
-              "required": true,
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "username": { "type": "string" },
-                  "password": { "type": "string" }
-                }
+      }
+    },
+    "/getEntries": {
+      "get": {
+        "tags" : ["Diary Entries"],
+        "summary": "Get all diary entries for a user",
+        "parameters": [
+          {
+            "name": "x-access-token",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": { "description": "Successful response" },
+          "500": { "description": "Error on the server" }
+        }
+      }
+    },
+    "/postEntry": {
+      "post": {
+        "tags" : ["Diary Entries"],
+        "summary": "Create a new diary entry",
+        "parameters": [
+          {
+            "name": "x-access-token",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": { "type": "string" },
+                "content": { "type": "string" }
               }
             }
-          ],
-          "responses": {
-            "200": { "description": "Successful login" },
-            "401": { "description": "Invalid credentials" },
-            "500": { "description": "Error on the server" }
           }
+        ],
+        "responses": {
+          "200": { "description": "Entry posted successfully" },
+          "500": { "description": "Error posting entry" }
         }
-      },
-      "/getEntries": {
-        "get": {
-          "summary": "Get all diary entries for a user",
-          "parameters": [
-            {
-              "name": "x-access-token",
-              "in": "header",
-              "required": true,
-              "type": "string"
-            }
-          ],
-          "responses": {
-            "200": { "description": "Successful response" },
-            "500": { "description": "Error on the server" }
-          }
-        }
-      },
-      "/postEntry": {
-        "post": {
-          "summary": "Create a new diary entry",
-          "parameters": [
-            {
-              "name": "x-access-token",
-              "in": "header",
-              "required": true,
-              "type": "string"
-            },
-            {
-              "name": "body",
-              "in": "body",
-              "required": true,
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "title": { "type": "string" },
-                  "content": { "type": "string" }
-                }
+      }
+    },
+    "/deleteEntry": {
+      "delete": {
+        "tags" : ["Diary Entries"],
+        "summary": "Delete a diary entry",
+        "parameters": [
+          {
+            "name": "x-access-token",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "entryId": { "type": "integer" }
               }
             }
-          ],
-          "responses": {
-            "200": { "description": "Entry posted successfully" },
-            "500": { "description": "Error posting entry" }
           }
-        }
-      },
-      "/deleteEntry": {
-        "delete": {
-          "summary": "Delete a diary entry",
-          "parameters": [
-            {
-              "name": "x-access-token",
-              "in": "header",
-              "required": true,
-              "type": "string"
-            },
-            {
-              "name": "body",
-              "in": "body",
-              "required": true,
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "entryId": { "type": "integer" }
-                }
-              }
-            }
-          ],
-          "responses": {
-            "200": { "description": "Entry deleted successfully" },
-            "404": { "description": "Entry not found or not authorized" },
-            "500": { "description": "Error deleting entry" }
-          }
+        ],
+        "responses": {
+          "200": { "description": "Entry deleted successfully" },
+          "404": { "description": "Entry not found or not authorized" },
+          "500": { "description": "Error deleting entry" }
         }
       }
     }
   }
+}
   
