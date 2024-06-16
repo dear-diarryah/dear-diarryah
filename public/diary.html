@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="script/diary.js"></script>
-    <link rel="stylesheet" href="style/personalView.css" />
+    <link rel="stylesheet" href="style/diary.css" />
     <title>Dear Diarryah</title>
   </head>
   <body>
@@ -30,7 +30,15 @@
           <input type="date" id="dateInput" placeholder="DD-MM-YYYY" required/>
           <input type="text" id="cityInput" placeholder="City" required/>
           <textarea id="contentTextarea" placeholder="Diary Entry"></textarea>
-          <button type="submit">Save</button>
+          <div id="button-container">
+            <button type="submit" id="submitButton">Save</button>
+            <button id="cancelButton" onclick="onCancelClicked()">Cancel</button>
+          </div>
+          <script>
+            function onCancelClicked() {
+            window.location.href = './personalView.html'
+            }
+            </script>
         </form>
       </div>
 
