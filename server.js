@@ -5,13 +5,16 @@ const jwt = require("jsonwebtoken");
 const sqlite3 = require("sqlite3").verbose();
 const fs = require("fs");
 const path = require("path");
+const swaggerUi = require("swagger-ui-express");
 
 const app = express();
 const port = 3000;
 const DB_FILE = path.join(__dirname, "db", "database.db");
+const SWAGGER_FILE = JSON.parse(fs.readFileSync(path.join(__dirname, "swagger.json"), "utf8"));
 
 app.use(bodyParser.json());
 app.use(express.static("public"));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(SWAGGER_FILE));
 
 const db = new sqlite3.Database(DB_FILE, (err) => {
   if (err) {
