@@ -9,6 +9,8 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("diaryForm").addEventListener("submit", async function (event) {
         event.preventDefault();
         const title = document.getElementById("titleInput").value;
+        const date = document.getElementById("dateInput").value;
+        const city = document.getElementById("cityInput").value;
         const content = document.getElementById("contentTextarea").value;
 
         try {
@@ -18,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 "Content-Type": "application/json",
                 "x-access-token": token, // Token im Header senden
             },
-            body: JSON.stringify({ title, content }),
+            body: JSON.stringify({ title, date, city, content}),
             });
             const data = await response.json();
             if (response.ok) {

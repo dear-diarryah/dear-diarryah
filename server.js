@@ -1,4 +1,5 @@
 const express = require("express");
+const fetch = require("node-fetch");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -25,7 +26,7 @@ const db = new sqlite3.Database(DB_FILE, (err) => {
       "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT, email TEXT, password TEXT)"
     );
     db.run(
-      "CREATE TABLE IF NOT EXISTS entries (id INTEGER PRIMARY KEY, user_id INTEGER, title TEXT, content TEXT, FOREIGN KEY(user_id) REFERENCES users(id))"
+      "CREATE TABLE IF NOT EXISTS entries (id INTEGER PRIMARY KEY, user_id INTEGER, title TEXT, date TEXT, city TEXT, weather TEXT, content TEXT, FOREIGN KEY(user_id) REFERENCES users(id))"
     );
   }
 });
@@ -75,15 +76,23 @@ app.get("/getEntries", verifyToken, (req, res) => {
   );
 });
 
-app.post('/postEntry', verifyToken, (req, res) => {
-  const { title, content } = req.body;
+app.post('/postEntry', verifyToken, async (req, res) => {
+  const { title, date, city, content } = req.body;
   const userId = req.userId;
-  db.run("INSERT INTO entries (user_id, title, content) VALUES (?, ?, ?)", [userId, title, content], function(err) {
-    if (err) {
-      return res.status(500).send("Error posting entry");
-    }
-    res.status(200).send({ message: 'Entry posted successfully' });
-  });
+
+  try {
+    const weather = await getWeather(date, city);
+    let weatherDescription = weather.forecast.forecastday[0].day.avgtemp_c;
+
+    db.run("INSERT INTO entries (user_id, title, date, city, weather, content) VALUES (?, ?, ?, ?, ?, ?)", [userId, title, formatDate(date), city, weatherDescription, content], function(err) {
+      if (err) {
+        return res.status(500).send("Error posting entry");
+      }
+      res.status(200).send({ message: "Entry posted successfully" });
+    });
+  } catch {
+    res.status(500).send("Error fetching weather data");
+  }
 });
 
 app.delete('/deleteEntry', verifyToken, (req, res) => {
@@ -118,4 +127,26 @@ function verifyToken(req, res, next) {
     req.userId = decoded.id;
     next();
   });
-}
+};
+
+function formatDate(dateString) {
+  const [year, month, day] = dateString.split("-");
+  return `${day}.${month}.${year}`;
+};
+
+async function getWeather(date, city) {
+  const apiKey = "4d04315071d04020aca153414241606";
+  const url = `http://api.weatherapi.com/v1/history.json?key=${apiKey}&q=${city}&dt=${date}`;
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    if (response.status !== 200) {
+      throw new Error(data.error.message);
+    }
+    return data;
+  } catch (error) {
+    console.error("Error fetching weather data:", error);
+    throw error;
+  }
+};

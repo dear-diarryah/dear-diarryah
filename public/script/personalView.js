@@ -44,7 +44,7 @@ function displayEntries(entries) {
   entries.forEach((post) => {
     const postElement = document.createElement("div");
     postElement.classList.add("post");
-    postElement.innerHTML = `<h3>${post.title}</h3><p>${post.content}</p>`;
+    postElement.innerHTML = `<h3>${post.title} - ${post.date} in ${post.city}, ${post.weather}°C</h3><p>${post.content}</p>`;
     postContainer.appendChild(postElement);
 
     const positiveVote = document.createElement("button");
