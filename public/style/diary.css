@@ -6,7 +6,7 @@
     font-style: normal;
     
   }
-
+  
 
 body {
     display: grid;
@@ -21,10 +21,8 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
-  
     font-family:'ivan2';
     color:#fff;
-    min-width:30em;
     min-height: 98vh;
 
 }
@@ -213,4 +211,43 @@ footer ul {
     color: white; /* Add text color */
     text-decoration: none; /* Remove underline */
     padding: 10px; /* Add padding */
+}
+
+
+@media (max-width: 600px) { /* Adjusts layout for screens smaller than 600px wide */
+    body {
+        grid-template-columns: 1fr; /* Makes nav and main stack vertically on smaller screens, */
+        grid-template-areas:
+            "h"
+            "n"
+            "m"
+            "f";
+        grid-template-rows: auto auto auto auto;
+    }
+
+     header, nav, main, footer {
+        min-width: 150px; /* Allows the nav and main content to shrink below the initial min-width */
+        width: 100%; /* Ensures nav and main take full width of the grid column */
+    }
+
+    nav{
+        min-width: 100%;
+        margin: 0;
+    }
+    main{
+        margin: 0;
+    }
+    nav .nav-item a {
+        display: block;
+        
+        padding: 5px;
+        text-decoration: none; /* Removes underline */
+        color: #fff; /* Text color */
+        text-align: center; /* Centers text in the navigation link */
+        transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effect */
+    }
+    nav {
+        margin: 0px;
+    }
+
 }

@@ -8,30 +8,41 @@
 body {
   display: grid;
   grid-template-areas:
-    "h h"
-    "m m"
-    "f f";
-  grid-template-rows: minmax(96px, 160px) auto minmax(64px, 128px);
-  grid-template-columns: 192px auto;
-  height: 100vh;
-  margin: 0;
-  place-items: center;
+      "h h"
+      "m m"
+      "f f";
+  grid-template-rows: minmax(64px, 128px) auto minmax(64px, 128px);
+  grid-template-columns: minmax(64px, 192px) auto;
   background-image: linear-gradient(rgba(4,9,39,0.7),rgba(4,9,39,0.7)), url(/images/diaryBG.png);
   background-position: center;
   background-size: cover;
-  position: relative;
-  font-family: 'ivan2';
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  font-family:'ivan2';
+  color:#fff;
+  min-height: 98vh;
 }
 
-.header {
+header {
   grid-area: h;
-  width: 100%;
-  min-height: 100%;
-  display: flex;
+  display:block;
+  
+  min-width: 15vh;
   justify-content: center;
-  align-items: flex-end;
-  font-size: 48px;
-  color: #fff;
+  align-items: center;
+  font-family:'ivan2';
+  color:#fff;
+  border: solid red 2px
+  
+  /* todo: window expands the view, e.g. set size to 60px, it overexceeds the screen on top */
+}
+
+
+.headerTitle {
+  color: #fff; /* White color for the text */
+  font-size: 50px; /* Ensures font size is between 16px and the smaller of 15vh or 50px */
+  text-align: center; /* Center-aligns the text */
+
 }
 
 main {
@@ -42,7 +53,6 @@ main {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  overflow-y: auto;
   font-size: 25px;
   
 }
@@ -190,22 +200,46 @@ button:hover {
 .col:hover{
   box-shadow: 0 0 20px rgba(0,0,0,2);
 }
-@media(max-width:700px){
-  .row{
-    flex-direction: column;
-  }
-}
-.layer{
-  background: transparent;
-  height: 100%;
-  width: 100%;
-  
-  top: 0;
-  left: 0;
-  transition: 0.5s;
 
-}
-.layer:hover{
-  background-color: rgba(4,9,39,0.7);
-  position: absolute;
+@media (max-width: 600px) { /* Adjusts layout for screens smaller than 600px wide */
+  body {
+      grid-template-columns: 1fr; /* Makes nav and main stack vertically on smaller screens, */
+      grid-template-areas:
+          "h"
+          "m"
+          "f";
+      grid-template-rows: auto auto auto;
+  }
+
+   header, main, footer {
+      min-width: 0; /* Allows the nav and main content to shrink below the initial min-width */
+      width: 100%; /* Ensures nav and main take full width of the grid column */
+  }
+  header {
+    display:block;
+    align-items: center;
+    border: solid red 2px;
+    font-size: 50px;
+    justify-content: center;
+  }
+
+  main{
+      margin: 0;
+  }
+  
+  .row{
+    display: grid;
+    flex-direction: column;
+    grid-template-columns: 1fr;
+  }
+
+  .layer{
+    background: transparent;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    transition: 0.5s;
+  }
+
 }

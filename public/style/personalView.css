@@ -27,12 +27,14 @@ body {
 
 header {
     grid-area: h;
-    width: 100%;
-    display:flex;
+    display:block;
+    
+    min-width: 15vh;
     justify-content: center;
     align-items: center;
     font-family:'ivan2';
     color:#fff;
+    border: solid red 2px
     
     /* todo: window expands the view, e.g. set size to 60px, it overexceeds the screen on top */
 }
@@ -319,4 +321,41 @@ footer ul {
 
 #submitButton:hover, #cancelBustton:hover {
     opacity: 0.8;
+}
+@media (max-width: 600px) { /* Adjusts layout for screens smaller than 600px wide */
+    body {
+        grid-template-columns: 1fr; /* Makes nav and main stack vertically on smaller screens, */
+        grid-template-areas:
+            "h"
+            "n"
+            "m"
+            "f";
+        grid-template-rows: auto auto auto auto;
+    }
+
+     header, nav, main, footer {
+        min-width: 150px; /* Allows the nav and main content to shrink below the initial min-width */
+        width: 100%; /* Ensures nav and main take full width of the grid column */
+    }
+
+    nav{
+        min-width: 100%;
+        margin: 0;
+    }
+    main{
+        margin: 0;
+    }
+    nav .nav-item a {
+        display: block;
+        
+        padding: 5px;
+        text-decoration: none; /* Removes underline */
+        color: #fff; /* Text color */
+        text-align: center; /* Centers text in the navigation link */
+        transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effect */
+    }
+    nav {
+        margin: 0px;
+    }
+
 }
