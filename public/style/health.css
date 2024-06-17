@@ -204,7 +204,7 @@ Here startes the individual design of diary
     grid-template-columns: 1fr 1fr;
 }
 
-#submitButton {
+#findDocButton {
     padding: 10px 20px;
     margin-right: 10px;
     margin-top: 10px;
@@ -213,7 +213,7 @@ Here startes the individual design of diary
     cursor: pointer;
     border-radius: 5px;
     border: none;
-    background-color: #4CAF50;
+    background-color: #230ee2;
     color: white;
 }
 

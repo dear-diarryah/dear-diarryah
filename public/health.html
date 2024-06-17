@@ -27,18 +27,17 @@
     <main>
         <div>
             <form id="healthForm">
-              <input type="text" id="titleInput" placeholder="Title" required/>
-              <input type="date" id="dateInput" placeholder="DD-MM-YYYY" required/>
-              <input type="text" id="symptomes" placeholder="Symptomes" required/>
-              <textarea id="contentTextarea" placeholder="Health Entry"></textarea>
-              <div id="button-container">
-                <button type="submit" id="submitButton">Save</button>
-                <button id="cancelButton" onclick="onCancelClicked()">Cancel</button>
-              </div>
-              <script>
-                function onCancelClicked() {
-                window.location.href = './health.html'
-                }
+                <textarea id="contentTextarea" placeholder="Health Entry"></textarea>
+                <input type="text" id="symptomes" placeholder="Symptomes" required/>
+              
+                <div id="button-container">
+                    <button id="cancelButton" onclick="onCancelClicked()">Cancel</button>
+                    <button id="findDocButton"onclick="onFindDocClicked()">Find Doc</button>
+                </div>
+                <script>
+                    function onCancelClicked() {
+                        window.location.href = './health.html'
+                    }
                 </script>
             </form>
           </div>
