@@ -1,13 +1,19 @@
-
+/*
+Main Elements in alle CSS of personal view are the same!:
+	body,
+	header, headerTitle,
+	nav, nav-item, nav ul,
+	main,
+	footer, footer ul, footer-item
+	@media
+*/
 @font-face {
     font-family: 'ivan2';
     src: url('/fonts/Borel-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
-    
   }
   
-
 body {
     display: grid;
     grid-template-areas:
@@ -24,39 +30,29 @@ body {
     font-family:'ivan2';
     color:#fff;
     min-height: 98vh;
-
 }
 
 header {
     grid-area: h;
     display:block;
-    
     min-width: 15vh;
     justify-content: center;
     align-items: center;
     font-family:'ivan2';
     color:#fff;
     border: solid red 2px
-    
-    /* todo: window expands the view, e.g. set size to 60px, it overexceeds the screen on top */
 }
-
 
 .headerTitle {
-    color: #fff; /* White color for the text */
-    font-size: 50px; /* Ensures font size is between 16px and the smaller of 15vh or 50px */
-    text-align: center; /* Center-aligns the text */
- 
+    color: #fff;
+    font-size: 50px;
+    text-align: center;
 }
-
-
 
 nav {
     grid-area: n;
     min-width: 128px;
     max-width: 192px;
-    
-    /*width: 192px;*/
     border: solid green 2px;
     border-radius: 15px;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;;
@@ -65,38 +61,30 @@ nav {
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    /* height: calc(100% - 20px); */
     font-family: 'ivan2';
     font-size: 24px;
-    
 }
-
 /* Styling for the navigation list */
 nav ul {
     list-style-type: none;
     padding: 0;
     margin: 0;
-
 }
-
 /* Styling for each navigation item */
 nav .nav-item a {
     display: block;
-    
     padding: 30px;
     text-decoration: none; /* Removes underline */
     color: #fff; /* Text color */
     text-align: center; /* Centers text in the navigation link */
     transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effect */
 }
-
 /* Hover effects for each navigation item */
 .nav-item a:hover {
     background-color: aquamarine; /* Background color on hover */
     color: orange; /* Text color on hover */
     cursor: pointer; /* Changes cursor to pointer to indicate it's clickable */
 }
-
 #logo {
     max-height: 90px;  /* Adjust the height to fit your nav */
     width: auto;  /* Maintains the aspect ratio of the image */
@@ -108,7 +96,6 @@ nav .nav-item a {
 
 main {
     grid-area: m;
-
     display: block;
     justify-content: center;
     align-items: center;
@@ -121,7 +108,73 @@ main {
     font-family: 'Courier New', Courier, monospace;
 }
 
+footer {
+    grid-area: f;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: small;
+    color: #fff;
+    border: solid yellow 2px;
+    
+}
 
+footer ul {
+    display: flex;
+    justify-content: center;
+    column-gap: 24px;
+    list-style-type: none;
+}
+
+.footer-item a {
+    color: white; /* Add text color */
+    text-decoration: none; /* Remove underline */
+    padding: 10px; /* Add padding */
+}
+
+@media (max-width: 600px) { /* Adjusts layout for screens smaller than 600px wide */
+    body {
+        grid-template-columns: 1fr; /* Makes nav and main stack vertically on smaller screens, */
+        grid-template-areas:
+            "h"
+            "n"
+            "m"
+            "f";
+        grid-template-rows: auto auto auto auto;
+    }
+
+     header, nav, main, footer {
+        min-width: 150px; /* Allows the nav and main content to shrink below the initial min-width */
+        width: 100%; /* Ensures nav and main take full width of the grid column */
+    }
+
+    nav{
+        min-width: 100%;
+        margin: 0;
+    }
+    main{
+        margin: 0;
+    }
+    nav .nav-item a {
+        display: block;
+        
+        padding: 5px;
+        text-decoration: none; /* Removes underline */
+        color: #fff; /* Text color */
+        text-align: center; /* Centers text in the navigation link */
+        transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effect */
+    }
+    nav {
+        margin: 0px;
+    }
+}
+/*
+End Main Elements
+*/
+/*
+Here startes the individual design of diary
+*/
 
 #diaryForm {
     display: grid;
@@ -132,18 +185,15 @@ main {
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     background-color: #f9f9f9;
     max-width: 80vw;
-  
 }
 
 #diaryForm input {
-    
     margin-top: 20px;
     padding: 10px;
     box-sizing: border-box; 
 }
 
 #diaryForm textarea {
-  
     margin-top: 20px;
     padding: 10px;
     box-sizing: border-box; 
@@ -181,73 +231,6 @@ main {
     color: white;
 }
 
-
-
 #submitButton:hover, #cancelButton:hover {
     opacity: 0.8;
-}
-
-
-footer {
-    grid-area: f;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: small;
-    color: #fff;
-    border: solid yellow 2px;
-    
-}
-
-footer ul {
-    display: flex;
-    justify-content: center;
-    column-gap: 24px;
-    list-style-type: none;
-}
-
-.footer-item a {
-    color: white; /* Add text color */
-    text-decoration: none; /* Remove underline */
-    padding: 10px; /* Add padding */
-}
-
-
-@media (max-width: 600px) { /* Adjusts layout for screens smaller than 600px wide */
-    body {
-        grid-template-columns: 1fr; /* Makes nav and main stack vertically on smaller screens, */
-        grid-template-areas:
-            "h"
-            "n"
-            "m"
-            "f";
-        grid-template-rows: auto auto auto auto;
-    }
-
-     header, nav, main, footer {
-        min-width: 150px; /* Allows the nav and main content to shrink below the initial min-width */
-        width: 100%; /* Ensures nav and main take full width of the grid column */
-    }
-
-    nav{
-        min-width: 100%;
-        margin: 0;
-    }
-    main{
-        margin: 0;
-    }
-    nav .nav-item a {
-        display: block;
-        
-        padding: 5px;
-        text-decoration: none; /* Removes underline */
-        color: #fff; /* Text color */
-        text-align: center; /* Centers text in the navigation link */
-        transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effect */
-    }
-    nav {
-        margin: 0px;
-    }
-
 }
