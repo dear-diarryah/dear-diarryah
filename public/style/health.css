@@ -175,3 +175,61 @@ End Main Elements
 /*
 Here startes the individual design of diary
 */
+
+#healthForm {
+    display: grid;
+    padding: 20px;
+    margin: 20px auto;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    background-color: #f9f9f9;
+    max-width: 80vw;
+}
+
+#healthForm input {
+    margin-top: 20px;
+    padding: 10px;
+    box-sizing: border-box; 
+}
+
+#healthForm textarea {
+    margin-top: 20px;
+    padding: 10px;
+    box-sizing: border-box; 
+}
+
+#buttonContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+#submitButton {
+    padding: 10px 20px;
+    margin-right: 10px;
+    margin-top: 10px;
+    max-width: 128px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+}
+
+#cancelButton {
+    padding: 10px 20px;
+    margin-right: 10px;
+    margin-top: 10px;
+    max-width: 128px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    background-color: #f44336;
+    color: white;
+}
+
+#submitButton:hover, #cancelButton:hover {
+    opacity: 0.8;
+}
