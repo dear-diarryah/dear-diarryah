@@ -55,6 +55,7 @@
         "responses": {
           "200": { "description": "Successful login" },
           "401": { "description": "Invalid credentials" },
+          "404": { "description": "No user found" },
           "500": { "description": "Error on the server" }
         }
       }
@@ -96,6 +97,8 @@
               "type": "object",
               "properties": {
                 "title": { "type": "string" },
+                "date": { "type": "string" },
+                "city": { "type": "string" },
                 "content": { "type": "string" }
               }
             }
