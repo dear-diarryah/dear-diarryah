@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     window.location.href = "/";
     return;
   }
+  
   try {
     const response = await fetch("/getEntries", {
       method: "GET",
@@ -24,6 +25,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const data = await response.json();
     const entries = data.entries;
 
+    
     displayEntries(entries);
   } catch (error) {
     console.error("Error:", error);
@@ -36,7 +38,42 @@ document.addEventListener("DOMContentLoaded", async function () {
     // alert("Logged out successfully");
     window.location.href = "/"; // Weiterleitung zur Login-Seite
   });
+
+  const fact = {
+    //TODO change fact to external API
+    title: "Interesting Fact",
+    date: "18.06.2024",
+    content: "This is a very interesting fact about something important. The external API need to be done asap!"
+  };
+  displayFact(fact);
 });
+
+/* for <div id="dailyFactsContainer"></div> in personalView.html */
+function displayFact(fact) {
+  const dailyFactsContainer = document.getElementById("dailyFactsContainer");
+  
+  const factElement = document.createElement("div");
+  factElement.classList.add("fact");
+  factElement.innerHTML = `<h3>${fact.title} - ${fact.date}</h3><p>${fact.content}</p>`;
+  dailyFactsContainer.appendChild(factElement);
+
+  const positiveVote = document.createElement("button");
+    positiveVote.classList.add("positiveVoteButton");
+    positiveVote.textContent = "Helpful";
+    factElement.appendChild(positiveVote);
+    positiveVote.addEventListener("click", function () {
+      alert("Thanks for voting!");
+    });
+
+    const negativeVote = document.createElement("button");
+    negativeVote.classList.add("negativeVoteButton");
+    negativeVote.textContent = "Dislike";
+    factElement.appendChild(negativeVote);
+    negativeVote.addEventListener("click", function () {
+      alert("Thanks for voting!");
+    });
+}
+/* ----------------------------------------------------------------- */
 
 function displayEntries(entries) {
   const postContainer = document.getElementById("postContainer");

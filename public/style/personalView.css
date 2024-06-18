@@ -176,9 +176,39 @@ End Main Elements
 /*
 Here startes the individual design of personalView
 */
+#dailyFactsContainer{
+    width: 87%;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+}
+.fact {
+    width: 90%;
+    background-color: #f0f2f5;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 10px;
+}
+.fact h3 {
+    color: #4a4a4a;
+    font-family: 'ivan2';
+}
+
+.fact p {
+    color: #595959;
+}
+
+.fact:hover {
+    background-color: #dddddd; /* Background color on hover */
+    color: orange; /* Text color on hover */
+    cursor: pointer; /* Changes cursor to pointer to indicate it's clickable */
+
+}
+
 #postContainer {
     width: 87%;
-    height: 100%;
     margin: 20px auto;
     display: flex;
     flex-direction: column;
