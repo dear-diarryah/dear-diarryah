@@ -229,7 +229,7 @@ Here startes the individual design of personalView
     color: white;
 }
 
-.positiveVoteButton, .negativeVoteButton , .deleteEntry {
+.positiveVoteButton, .negativeVoteButton , .deleteEntry, .editEntry {
     padding: 5px 15px;
     margin: 4px; /* Space between buttons */
     font-size: 16px;
@@ -262,6 +262,13 @@ Here startes the individual design of personalView
 
 .deleteEntry:hover {
     background-color: #212121;
+}
+.editEntry {
+    background-color: #2aaf5d9f;
+}
+
+.editEntry:hover {
+    background-color: #06f05f9f;
 }
 
 #diaryForm {

@@ -95,6 +95,11 @@ app.post('/postEntry', verifyToken, async (req, res) => {
   }
 });
 
+app.put('/editEntry', verifyToken, (req, res) => {
+  const { entryId } = req.body;
+  //TODO
+});
+
 app.delete('/deleteEntry', verifyToken, (req, res) => {
   const { entryId } = req.body;
 

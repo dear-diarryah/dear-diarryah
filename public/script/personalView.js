@@ -63,6 +63,14 @@ function displayEntries(entries) {
       alert("Thanks for voting!");
     });
 
+    const editEntry = document.createElement("button");
+    editEntry.classList.add("editEntry");
+    editEntry.textContent = "Edit Entry";
+    postElement.appendChild(editEntry);
+    editEntry.addEventListener("click", function () {
+      window.location.href = "./diary.html"
+    });
+
     const deleteEntry = document.createElement("button");
     deleteEntry.classList.add("deleteEntry");
     deleteEntry.textContent = "Delete Entry";
