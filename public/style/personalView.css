@@ -231,7 +231,7 @@ Here startes the individual design of personalView
 
 .positiveVoteButton, .negativeVoteButton , .deleteEntry {
     padding: 5px 15px;
-    margin-left: 8px; /* Space between buttons */
+    margin: 4px; /* Space between buttons */
     font-size: 16px;
     color: white;
     border: none;
