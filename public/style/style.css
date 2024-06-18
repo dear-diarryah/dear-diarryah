@@ -40,7 +40,7 @@ header {
   align-items: center;
   font-family:'ivan2';
   color:#fff;
-  border: solid red 2px
+  /*border: solid red 2px*/
 }
 
 .headerTitle {
@@ -53,7 +53,7 @@ nav {
   grid-area: n;
   min-width: 128px;
   max-width: 192px;
-  border: solid green 2px;
+  /*border: solid green 2px;*/
   border-radius: 15px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;;
   margin: 10px;
@@ -102,7 +102,7 @@ main {
   justify-content: space-between;
   /*justify-content: center;*/
   align-items: center;
-  border: solid orange 2px;;     
+  /*border: solid orange 2px;*/     
   border-radius: 15px;           
   box-sizing: border-box;
   margin: 10px;
@@ -120,8 +120,7 @@ footer {
   font-family: 'Courier New', Courier, monospace;
   font-size: small;
   color: #fff;
-  border: solid yellow 2px;
-  
+  /*border: solid yellow 2px;*/
 }
 
 footer ul {
@@ -192,7 +191,7 @@ main h1 {
 }
 
 main p {
-  margin: 0 10px 0 40px;
+  margin: 10px;
   font-size: 19px;
   color: #fff;
 }
