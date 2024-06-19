@@ -110,6 +110,38 @@
         }
       }
     },
+    "/editEntry": {
+      "put": {
+        "tags" : ["Diary Entries"],
+        "summary": "Edit an existing diary entry",
+        "parameters": [
+          {
+            "name": "x-access-token",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": { "type": "string" },
+                "date": { "type": "string" },
+                "city": { "type": "string" },
+                "content": { "type": "string" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Entry edited successfully" },
+          "500": { "description": "Error editing entry" }
+        }
+      }
+    },
     "/deleteEntry": {
       "delete": {
         "tags" : ["Diary Entries"],

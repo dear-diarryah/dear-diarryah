@@ -1,0 +1,221 @@
+@font-face {
+    font-family: 'ivan2';
+    src: url('/fonts/Borel-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    display: grid;
+    grid-template-areas:
+        "h h"
+        "n m"
+        "f f";
+    grid-template-rows: minmax(64px, 128px) auto minmax(64px, 128px);
+    grid-template-columns: minmax(64px, 192px) auto;
+    background-image: linear-gradient(rgba(4,9,39,0.7),rgba(4,9,39,0.7)), url(/images/diaryBG.png);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-family: 'ivan2';
+    color: #fff;
+    min-height: 98vh;
+}
+
+header {
+    grid-area: h;
+    display: block;
+    min-width: 15vh;
+    justify-content: center;
+    align-items: center;
+    font-family: 'ivan2';
+    color: #fff;
+}
+
+.headerTitle {
+    color: #fff;
+    font-size: 50px;
+    text-align: center;
+}
+
+nav {
+    grid-area: n;
+    min-width: 128px;
+    max-width: 192px;
+    border-radius: 15px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    margin: 10px;
+    display: block;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    font-family: 'ivan2';
+    font-size: 24px;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav .nav-item a {
+    display: block;
+    padding: 30px;
+    text-decoration: none;
+    color: #fff;
+    text-align: center;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.nav-item a:hover {
+    background-color: aquamarine;
+    color: orange;
+    cursor: pointer;
+}
+
+#logo {
+    max-height: 90px;
+    width: auto;
+    display: block;
+    margin: 0 auto;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+main {
+    grid-area: m;
+    display: block;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+    box-sizing: border-box;
+    margin: 10px;
+    margin-left: 20px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+footer {
+    grid-area: f;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: small;
+    color: #fff;
+}
+
+footer ul {
+    display: flex;
+    justify-content: center;
+    column-gap: 24px;
+    list-style-type: none;
+}
+
+.footer-item a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+}
+
+@media (max-width: 600px) {
+    body {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "h"
+            "n"
+            "m"
+            "f";
+        grid-template-rows: auto auto auto auto;
+    }
+
+    header, nav, main, footer {
+        min-width: 150px;
+        width: 100%;
+    }
+
+    nav {
+        min-width: 100%;
+        margin: 0;
+    }
+
+    main {
+        margin: 0;
+    }
+
+    nav .nav-item a {
+        display: block;
+        padding: 5px;
+        text-decoration: none;
+        color: #fff;
+        text-align: center;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    nav {
+        margin: 0px;
+    }
+}
+
+.profile-container {
+    display: grid;
+    padding: 20px;
+    margin: 20px auto;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    background-color: #f9f9f9;
+    max-width: 80vw;
+}
+
+.profile-container input,
+.profile-container textarea {
+    margin-top: 20px;
+    padding: 10px;
+    box-sizing: border-box;
+    width: 100%;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.button-container button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    color: white;
+}
+
+#editButton {
+    background-color: #FFA500;
+}
+
+#saveButton {
+    background-color: #4CAF50;
+}
+
+#cancelButton {
+    background-color: #f44336;
+}
+
+.button-container button:hover {
+    opacity: 0.8;
+}
+
+.slider-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 16px;
+    color: #000000;
+}
+
