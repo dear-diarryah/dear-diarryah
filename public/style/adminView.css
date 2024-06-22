@@ -169,6 +169,10 @@ footer ul {
     nav {
         margin: 0px;
     }
+
+  
+    
+
 }
 
 
@@ -184,4 +188,95 @@ footer ul {
     padding: 10px;
     margin-bottom: 10px;
     cursor: pointer;
+}
+
+#usernameChangeForm {
+    padding: 20px;
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    background-color: #f8f8f8;
+    display: none; /* Make sure to control display via JavaScript */
+    width: 100%; /* Adjust based on your layout requirements */
+    max-width: 500px; /* Limits the form width for better aesthetics */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: adds subtle shadow for depth */
+}
+
+#usernameChangeForm label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 18px; /* Larger label font */
+    color: #333; /* Dark grey for better readability */
+}
+
+#usernameChangeForm input[type="text"],
+#usernameChangeForm input[type="password"] {
+    width: 100%;
+    padding: 12px 10px;
+    margin-bottom: 16px; /* Spacing between form elements */
+    border: 1px solid #ccc;
+    border-radius: 4px; /* Rounded corners for the input fields */
+    font-size: 18px; /* Larger input text for better readability */
+    box-sizing: border-box; /* Ensures padding does not affect width */
+}
+
+#usernameChangeForm button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #4CAF50; /* Consistent with other button styles */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+#usernameChangeForm button:hover {
+    background-color: #f44336;
+}
+
+.button {
+    padding:10px;
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-left: 20px;
+    width: 180px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    color: white;
+}
+
+.changeButton {
+    background-color: #4CAF50; /* Green, for actions like 'Change Username' or 'Reset Password' */
+}
+
+.lockButton {
+    background-color: #FFA500; /* Orange, for 'Lock User' */
+}
+
+.deleteButton {
+    background-color: #f44336; /* Red, for 'Delete User' */
+}
+
+.button:hover {
+    opacity: 0.8;
+}
+
+.buttonContainer {
+    display: flex; /* Flexbox to align buttons */
+    flex-wrap: wrap; /* Allows buttons to wrap in small screens */
+    justify-content: flex-start; /* Aligns buttons to the start */
+    margin-top: 10px; /* Spacing above the button container */
+}
+
+.user span {
+    display: block; /* Ensures label is full width, pushing buttons to a new line */
+    margin-bottom: 5px; /* Spacing between the label and buttons */
+}
+
+#notification {
+    font-size: 21px;
+    color: white;
+    font-weight: bold;
 }
