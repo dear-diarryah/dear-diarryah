@@ -210,12 +210,64 @@ footer ul {
     opacity: 0.8;
 }
 
+/* ------------------ */
+
+
+
 .slider-container {
     display: flex;
     align-items: center;
-    width: 100%;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'ivan2';
     font-size: 16px;
     color: #000000;
+    
+}
+
+.slider-container {
+
+    margin: 0;
+}
+
+.slider-container input[type="range"] {
+    padding:0;
+}
+
+.slider-container output {
+    position: absolute;
+    bottom: -25px; /* Position unter dem Slider */
+    left: +25; /* Startposition - wird durch JS überschrieben */
+    transform: translateX(-50%); /* Zentriert das output-Element horizontal */
+   
+}
+
+label {
+    display: block; /* Stellt sicher, dass das Label als Blockelement angezeigt wird */
+    color: black; /* Stellt die Textfarbe sicher, falls sie anderswo überschrieben wird */
+    font-size: 16px; /* Stellt eine angemessene Schriftgröße sicher */
+    margin-top: 10px; /* Fügt etwas Abstand unter dem Label hinzu */
+    font-family: ivan2;
+}
+
+.vaccine {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding:10px;
+}
+
+.vaccine label {
+    flex: 1;
+}
+
+.vaccine select, .vaccine input[type="date"] {
+    flex: 2;
+    margin-left: 10px;
+}
+
+.form-group label {
+    display: flex;
+    margin-bottom: 0px; 
+    
 }
 
