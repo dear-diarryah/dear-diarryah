@@ -251,7 +251,7 @@ label {
 .vaccine {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     margin-top: 10px;
     padding:10px;
 }
@@ -266,8 +266,21 @@ label {
 }
 
 .form-group label {
-    display: flex;
+    /* display: flex; */
     margin-bottom: 0px; 
     
 }
+.radio-buttons {
+    display: flex;
+    align-items: flex-start;
+}
 
+.radio-buttons label {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 5px;
+}
+
+.radio-buttons input[type="radio"] {
+    margin: 0;
+}

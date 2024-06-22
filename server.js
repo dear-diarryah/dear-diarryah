@@ -168,3 +168,22 @@ async function getWeather(date, city) {
     throw error;
   }
 };
+
+/*https://dogapi.dog/docs/api-v2*/
+app.get('/api/fact', async (req, res) => {
+  const url = `https://dogapi.dog/api/v2/facts?limit=1`;
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (response.status !== 200) {
+      throw new Error(data.error.message);
+    }
+
+    res.json(data);
+  } catch (error) {
+    console.error("Error fetching fact data:", error);
+    res.status(500).json({ error: "Error fetching fact data" });
+  }
+});

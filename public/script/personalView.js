@@ -39,14 +39,34 @@ document.addEventListener("DOMContentLoaded", async function () {
     window.location.href = "/"; // Weiterleitung zur Login-Seite
   });
 
-  const fact = {
-    //TODO change fact to external API
-    title: "Interesting Fact",
-    date: "18.06.2024",
-    content: "This is a very interesting fact about something important. The external API need to be done asap!"
-  };
-  displayFact(fact);
+  /*Fetch the fact data from the API using the fetchFact function
+   and create an object to hold the fact details if fetch is true*/
+  const fact = await fetchFact();
+  if (fact) {
+    const factObject = {
+        title: "Interesting Fact",
+        date: new Date().toLocaleDateString(), // Setting the current date
+        content: fact.attributes.body,
+    };
+    displayFact(factObject);
+  }
 });
+/*asynchronous function to fetch fact data from  API */
+async function fetchFact() {
+  try {
+    const response = await fetch('/api/fact');
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Error fetching fact');
+    }
+    /*return first fact from array, it is also possible to take more facts (change limit in request on server.js) */
+    return data.data[0]; // Assuming the fact is in data.data[0]
+  } catch (error) {
+    console.error('Error fetching fact:', error);
+    return null;
+  }
+}
 
 /* for <div id="dailyFactsContainer"></div> in personalView.html */
 function displayFact(fact) {
