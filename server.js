@@ -68,6 +68,19 @@ app.post("/login", (req, res) => {
   });
 });
 
+
+app.get("/getUsers",  (req, res) => {
+  db.all("SELECT * FROM users", [], (err, user) => {
+    if (err) {
+      res.status(500).send("Error fetching users");
+      return;
+    }
+    res.status(200).send({ user: user });
+  });
+});
+
+
+
 app.get("/getEntries", verifyToken, (req, res) => {
   db.all("SELECT * FROM entries WHERE user_id = ?", [req.userId], (err, entries) => {
       if (err) return res.status(500).send("Error on the server.");

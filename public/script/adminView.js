@@ -1,10 +1,27 @@
 document.addEventListener('DOMContentLoaded', function() {
     fetchUsers();
 
-    function fetchUsers() {
-        fetch('/getUsers')
-            .then(response => response.json())
-            .then(users => displayUsers(users));
+    async function fetchUsers() {
+
+        try {
+            const response = await fetch("/getUsers", {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              }
+            })
+            /*.then(response => console.log(response.user))
+            .then(users => displayUsers(users));*/
+            const data = await response.json();
+            const users = data.user;
+            console.log(users);
+            displayUsers(users);
+        
+        }
+            catch(error) {
+                console.error("Error:", error);
+                alert("Failed to fetch entries");
+            }
     }
 
     function displayUsers(users) {
