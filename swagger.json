@@ -12,7 +12,7 @@
     "/signUp": {
       "post": {
         "tags" : ["Authentication"],
-        "summary": "Register a new user",
+        "summary": "Create a new user account",
         "parameters": [
           {
             "name": "body",
@@ -96,10 +96,26 @@
             "schema": {
               "type": "object",
               "properties": {
-                "title": { "type": "string" },
-                "date": { "type": "string" },
-                "city": { "type": "string" },
-                "content": { "type": "string" }
+           "title": {
+                  "type": "string",
+                  "description": "The title of the diary entry"
+                },
+                "date": {
+                  "type": "string",
+                  "description": "The date of the diary entry (format: YYYY-MM-DD)"
+                },
+                "city": {
+                  "type": "string",
+                  "description": "The city associated with the diary entry"
+                },
+                "content": {
+                  "type": "string",
+                  "description": "The content of the diary entry"
+                },
+                "weather": {
+                  "type": "string",
+                  "description": "The weather information for the specified date and city"
+                }
               }
             }
           }
