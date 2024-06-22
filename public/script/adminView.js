@@ -59,7 +59,7 @@ evtl. token hinterlegen
             const userDiv = document.createElement('div');
             userDiv.className = 'user';
             const userLabel = document.createElement('span');
-            userLabel.textContent = "Affected User: " + user.username;
+            userLabel.textContent = "Affected User: " + user.username + " UID: " + user.id;
     
             const buttonContainer = document.createElement('div');
             buttonContainer.className = 'buttonContainer';
@@ -88,27 +88,28 @@ evtl. token hinterlegen
         if (form) {
             form.addEventListener('submit', async function(event) {
                 event.preventDefault();
-                await changeUsernameLogic();
+                await changeUsernameLogic(user.id);
             });
         }
     }
     
-    async function changeUsernameLogic() {
+    async function changeUsernameLogic(userId) {
         const newUsername = document.getElementById("newUsername").value;
         try {
-            const response = await fetch("/updateUsername", {
-                method: "POST",
+            const response = await fetch(`/api/users/${userId}`, {
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ newUsername })
+                body: JSON.stringify({ username: newUsername })
             });
             const data = await response.json();
-            if (data.success) {
+            if (response.ok) {
                 alert("Username successfully updated.");
-                window.location.reload();
+                hideForm(); // Optionally hide the form after successful update
+                fetchUsers(); // Refresh user list
             } else {
-                alert("Failed to update username: " + data.message);
+                alert("Failed to update username: " + data.error);
             }
         } catch (error) {
             console.error("Error:", error);

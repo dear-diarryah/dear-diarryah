@@ -187,3 +187,16 @@ app.get('/api/fact', async (req, res) => {
     res.status(500).json({ error: "Error fetching fact data" });
   }
 });
+
+app.put('/api/users/:userId', (req, res) => {
+  const userId = req.params.id;
+  const newUsername = req.body.newUsername;
+
+  db.run('UPDATE users SET username = ? WHERE id = ?', [newUsername, userId], (err) => {
+    if (err) {
+        res.status(500).json({ error: 'Fehler beim Aktualisieren des Benutzernamens' });
+    } else {
+        res.json({ message: 'Benutzername erfolgreich aktualisiert' });
+    }
+  });
+});
