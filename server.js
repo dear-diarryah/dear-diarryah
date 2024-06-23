@@ -23,7 +23,7 @@ const db = new sqlite3.Database(DB_FILE, (err) => {
   } else {
     console.log("Connected to the SQLite database.");
     db.run(
-      "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT, email TEXT, password TEXT)"
+      "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT, email TEXT, password TEXT, isAdmin BOOLEAN)"
     );
     db.run(
       "CREATE TABLE IF NOT EXISTS entries (id INTEGER PRIMARY KEY, user_id INTEGER, title TEXT, date TEXT, city TEXT, weather TEXT, content TEXT, FOREIGN KEY(user_id) REFERENCES users(id))"
@@ -36,7 +36,7 @@ app.post("/signUp", (req, res) => {
   const hashedPassword = bcrypt.hashSync(password, 8);
 
   db.run(
-    "INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
+    "INSERT INTO users (username, email, password, isAdmin) VALUES (?, ?, ?, 0)",
     [username, email, hashedPassword],
     function (err) {
       if (err) {
@@ -61,14 +61,18 @@ app.post("/login", (req, res) => {
     if (!passwordIsValid)
       return res.status(401).send({ auth: false, token: null });
 
-    const token = jwt.sign({ id: user.id }, "your_secret_key", {
+    const token = jwt.sign({ id: user.id, isAdmin: user.isAdmin }, "your_secret_key", {
       expiresIn: 86400,
     });
-    res.status(200).send({ auth: true, token: token });
+    res.status(200).send({ auth: true, token: token, isAdmin: user.isAdmin });
   });
 });
 
-app.get("/admin/getUsers",  (req, res) => {
+app.get("/admin/getUsers",  verifyToken, (req, res) => {
+  if (!req.user.isAdmin) {
+    return res.status(403).json({ error: "Access forbidden, you are not an admin." });
+  }
+
   db.all("SELECT * FROM users", [], (err, users) => {
     if (err) {
       res.status(500).send("Error fetching users");
@@ -78,9 +82,13 @@ app.get("/admin/getUsers",  (req, res) => {
   });
 });
 
-app.put("/admin/updateUsername/:userId", (req, res) => {
+app.put("/admin/updateUsername/:userId", verifyToken, (req, res) => {
   const userId = req.params.userId;
   const newUsername = req.body.newUsername;
+
+  if (!req.user.isAdmin) {
+    return res.status(403).json({ error: "Access forbidden, you are not an admin." });
+  }
 
   db.run("UPDATE users SET username = ? WHERE id = ?", [newUsername, userId], (err) => {
     if (err) {
@@ -165,14 +173,21 @@ function verifyToken(req, res, next) {
 
   jwt.verify(token, "your_secret_key", (err, decoded) => {
     if (err)
-      return res
-        .status(500)
-        .send({ auth: false, message: "Failed to authenticate token." });
+      return res.status(500).send({ auth: false, message: "Failed to authenticate token." });
 
     req.userId = decoded.id;
-    next();
+    req.user = decoded;
+
+    db.get("SELECT isAdmin FROM users WHERE id = ?", [req.userId], (err, row) => {
+      if (err || !row) {
+        return res.status(500).send({ auth: false, message: "Failed to verify admin status." });
+      }
+      req.user.isAdmin = row.isAdmin;
+      next();
+    });
   });
-};
+}
+
 
 function formatDate(dateString) {
   const [year, month, day] = dateString.split("-");

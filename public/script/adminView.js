@@ -1,5 +1,32 @@
-document.addEventListener('DOMContentLoaded', function() {
-    fetchUsers();
+document.addEventListener('DOMContentLoaded', async function() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        alert("No token found, please log in first.");
+        window.location.href = "/";
+        return;
+    }
+
+    try {
+        const response = await fetch("/admin/getUsers", {
+          method: "GET",
+          headers: { 
+            "Content-Type": "application/json",
+            "x-access-token": token,
+        }
+        });
+        const data = await response.json();
+        const users = data.users;
+
+        console.log(response);
+        if (!response.ok) {
+            throw new Error("Failed to fetch entries");
+        }
+        displayUsers(users);
+    } catch (error) {
+        console.error("Error:", error);
+        alert("Failed to fetch entries, redirecting to landing page. Please log in again.");
+        localStorage.removeItem("token");
+    }
 
     /* TODO
     ich habe die initiale verison mal aufgesetzt.
@@ -24,18 +51,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     evtl. token hinterlegen
     */
+
+    document.getElementById("logoutButton").addEventListener("click", function (event) {
+        event.preventDefault();
+        localStorage.removeItem("token");
+        // alert("Logged out successfully");
+        window.location.href = "/";
+    });
 });
 
-async function fetchUsers() {
-    try {
-        const response = await fetch("/admin/getUsers", {
-          method: "GET",
-          headers: { "Content-Type": "application/json" }
-        });
-        const data = await response.json();
-        const users = data.users;
-
-        const container = document.getElementById('userListContainer');
+function displayUsers(users) {
+    const container = document.getElementById('userListContainer');
 
         if (container.hasChildNodes()) {
             container.innerHTML = '';
@@ -59,10 +85,6 @@ async function fetchUsers() {
             userDiv.append(userLabel, buttonContainer);
             container.appendChild(userDiv);
         });
-    } catch (error) {
-        console.error("Error:", error);
-        alert("Failed to fetch entries");
-    }
 }
 
 function createButton(text, className, onClickFunction) {
@@ -74,7 +96,6 @@ function createButton(text, className, onClickFunction) {
 }
 
 function showUsernameChangeForm(user) {
-    console.log(user);
     const form = document.getElementById("usernameChangeForm");
     
     if (form) {
@@ -110,7 +131,6 @@ async function changeUsername(userId) {
         });
         const data = await response.json();
         if (response.ok) {
-            alert(data.message);
             fetchUsers();
         } else {
             alert(data.error);

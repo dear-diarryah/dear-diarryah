@@ -24,19 +24,20 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
     const data = await response.json();
     const entries = data.entries;
-
     
     displayEntries(entries);
   } catch (error) {
     console.error("Error:", error);
-    alert("Failed to fetch entries");
+    alert("Failed to fetch entries, redirecting to landing page. Please log in again.");
+    localStorage.removeItem("token");
+    window.location.href = "/";
   }
 
   document.getElementById("logoutButton").addEventListener("click", function (event) {
-    event.preventDefault(); // Verhindert das Standardverhalten des Links
-    localStorage.removeItem("token"); // Entfernt den Token aus dem LocalStorage
+    event.preventDefault();
+    localStorage.removeItem("token");
     // alert("Logged out successfully");
-    window.location.href = "/"; // Weiterleitung zur Login-Seite
+    window.location.href = "/";
   });
 
   /*Fetch the fact data from the API using the fetchFact function
