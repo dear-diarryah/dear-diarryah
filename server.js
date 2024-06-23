@@ -68,18 +68,28 @@ app.post("/login", (req, res) => {
   });
 });
 
-
-app.get("/getUsers",  (req, res) => {
-  db.all("SELECT * FROM users", [], (err, user) => {
+app.get("/admin/getUsers",  (req, res) => {
+  db.all("SELECT * FROM users", [], (err, users) => {
     if (err) {
       res.status(500).send("Error fetching users");
       return;
     }
-    res.status(200).send({ user: user });
+    res.status(200).send({ users: users });
   });
 });
 
+app.put("/admin/updateUsername/:userId", (req, res) => {
+  const userId = req.params.userId;
+  const newUsername = req.body.newUsername;
 
+  db.run("UPDATE users SET username = ? WHERE id = ?", [newUsername, userId], (err) => {
+    if (err) {
+        res.status(500).json({ error: "Error while updating username." });
+    } else {
+        res.json({ message: "Username has been updated successfully!" });
+    }
+  });
+});
 
 app.get("/getEntries", verifyToken, (req, res) => {
   db.all("SELECT * FROM entries WHERE user_id = ?", [req.userId], (err, entries) => {
@@ -127,6 +137,23 @@ app.delete('/deleteEntry', verifyToken, (req, res) => {
   });
 });
 
+/*https://dogapi.dog/docs/api-v2*/
+app.get('/api/fact', async (req, res) => {
+  const url = `https://dogapi.dog/api/v2/facts?limit=1`;
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    if (response.status !== 200) {
+      throw new Error(data.error.message);
+    }
+    res.json(data);
+  } catch (error) {
+    console.error("Error fetching fact data:", error);
+    res.status(500).json({ error: "Error fetching fact data" });
+  }
+});
+
 app.listen(port, "0.0.0.0", () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
@@ -168,35 +195,3 @@ async function getWeather(date, city) {
     throw error;
   }
 };
-
-/*https://dogapi.dog/docs/api-v2*/
-app.get('/api/fact', async (req, res) => {
-  const url = `https://dogapi.dog/api/v2/facts?limit=1`;
-
-  try {
-    const response = await fetch(url);
-    const data = await response.json();
-
-    if (response.status !== 200) {
-      throw new Error(data.error.message);
-    }
-
-    res.json(data);
-  } catch (error) {
-    console.error("Error fetching fact data:", error);
-    res.status(500).json({ error: "Error fetching fact data" });
-  }
-});
-
-app.put('/api/users/:userId', (req, res) => {
-  const userId = req.params.id;
-  const newUsername = req.body.newUsername;
-
-  db.run('UPDATE users SET username = ? WHERE id = ?', [newUsername, userId], (err) => {
-    if (err) {
-        res.status(500).json({ error: 'Fehler beim Aktualisieren des Benutzernamens' });
-    } else {
-        res.json({ message: 'Benutzername erfolgreich aktualisiert' });
-    }
-  });
-});
