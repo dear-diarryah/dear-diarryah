@@ -99,6 +99,38 @@ app.put("/admin/updateUsername/:userId", verifyToken, (req, res) => {
   });
 });
 
+app.delete('/admin/deleteUser/:userId', verifyToken, (req, res) => {
+  const userId = req.params.userId;
+
+  if (!req.user.isAdmin) {
+    return res.status(403).json({ error: "Access forbidden, you are not an admin." });
+  }
+
+  db.serialize(() => {
+    db.run("BEGIN TRANSACTION");
+
+    db.run("DELETE FROM entries WHERE user_id = ?", [userId], function(err) {
+      if (err) {
+        db.run("ROLLBACK");
+        return res.status(500).json({ error: "Error deleting user's entries" });
+      }
+
+      db.run("DELETE FROM users WHERE id = ?", [userId], function(err) {
+        if (err) {
+          db.run("ROLLBACK");
+          return res.status(500).json({ error: "Error deleting user" });
+        }
+        if (this.changes === 0) {
+          db.run("ROLLBACK");
+          return res.status(404).json({ error: "User not found or not authorized" });
+        }
+        db.run("COMMIT");
+        res.status(200).json({ message: "User and their entries deleted successfully" });
+      });
+    });
+  });
+});
+
 app.get("/getEntries", verifyToken, (req, res) => {
   db.all("SELECT * FROM entries WHERE user_id = ?", [req.userId], (err, entries) => {
       if (err) return res.status(500).send("Error on the server.");
