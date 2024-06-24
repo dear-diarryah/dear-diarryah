@@ -79,11 +79,10 @@ function displayUsers(users) {
         buttonContainer.className = 'buttonContainer';
 
         const btnChangeUsername = createButton('Change Username', 'button changeButton', () => showUsernameChangeForm(user));
-        const btnResetPassword = createButton('Reset Password', 'button changeButton', () => resetPassword(user));
-        const btnLockUser = createButton('Lock User', 'button lockButton', () => lockUser(user));
+        const btnResetPassword = createButton('Change Password', 'button changeButton', () => showPasswordChangeForm(user));
         const btnDeleteUser = createButton('Delete User', 'button deleteButton', () => deleteUser(user));
 
-        buttonContainer.append(btnChangeUsername, btnResetPassword, btnLockUser, btnDeleteUser);
+        buttonContainer.append(btnChangeUsername, btnResetPassword, btnDeleteUser);
         userDiv.append(userLabel, buttonContainer);
         container.appendChild(userDiv);
     });
@@ -98,6 +97,7 @@ function createButton(text, className, onClickFunction) {
 }
 
 function showUsernameChangeForm(user) {
+    hidePasswordChangeForm();
     const form = document.getElementById("usernameChangeForm");
     
     if (form) {
@@ -134,6 +134,7 @@ async function changeUsername(userId) {
         });
         const data = await response.json();
         if (response.ok) {
+            alert("Username changed successfully!");
             fetchUsers();
         } else {
             alert(data.error);
@@ -145,7 +146,60 @@ async function changeUsername(userId) {
     }
 }
 
+function showPasswordChangeForm(user) {
+    hideUsernameChangeForm()
+    const form = document.getElementById("passwordChangeForm");
+    
+    if (form) {
+        document.getElementById("newPassword").placeholder = "New password for " + user.username;
+        document.getElementById("newPassword").value = "";
+        form.style.display = "block";
+
+        const newForm = form.cloneNode(true);
+        form.parentNode.replaceChild(newForm, form);
+
+        newForm.addEventListener("submit", async function(event) {
+            event.preventDefault();
+            await changePassword(user.id);
+        });
+    }
+}
+
+function hidePasswordChangeForm() {
+    const form = document.getElementById("passwordChangeForm");
+    if (form) form.style.display = "none";
+}
+
+async function changePassword(userId) {
+    const newPassword = document.getElementById("newPassword").value;
+    try {
+        const token = localStorage.getItem("token");
+        const response = await fetch(`/admin/updatePassword/${userId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "x-access-token": token,
+            },
+            body: JSON.stringify({ newPassword: newPassword })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            alert("Password changed successfully!");
+            fetchUsers();
+        } else {
+            alert(data.error);
+        }
+        hidePasswordChangeForm();
+    } catch (error) {
+        console.error("Error:", error);
+        alert("An error occurred while updating password.");
+    }
+}
+
 async function deleteUser(user) {
+    hideUsernameChangeForm();
+    hidePasswordChangeForm();
+
     const confirmation = confirm(`Are you sure you want to delete user ${user.username}?`);
     if (!confirmation) return;
 

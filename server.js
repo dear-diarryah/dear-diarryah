@@ -99,6 +99,24 @@ app.put("/admin/updateUsername/:userId", verifyToken, (req, res) => {
   });
 });
 
+app.put("/admin/updatePassword/:userId", verifyToken, (req, res) => {
+  const userId = req.params.userId;
+  const newPassword = req.body.newPassword;
+  const hashedPassword = bcrypt.hashSync(newPassword, 8);
+
+  if (!req.user.isAdmin) {
+    return res.status(403).json({ error: "Access forbidden, you are not an admin." });
+  }
+
+  db.run("UPDATE users SET password = ? WHERE id = ?", [hashedPassword, userId], (err) => {
+    if (err) {
+        res.status(500).json({ error: "Error while updating password." });
+    } else {
+        res.json({ message: "Password has been updated successfully!" });
+    }
+  });
+});
+
 app.delete('/admin/deleteUser/:userId', verifyToken, (req, res) => {
   const userId = req.params.userId;
 

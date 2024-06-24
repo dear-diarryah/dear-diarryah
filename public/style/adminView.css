@@ -190,7 +190,8 @@ footer ul {
     cursor: pointer;
 }
 
-#usernameChangeForm {
+#usernameChangeForm,
+#passwordChangeForm {
     padding: 20px;
     margin-top: 20px;
     border: 1px solid #ccc;
@@ -201,7 +202,8 @@ footer ul {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: adds subtle shadow for depth */
 }
 
-#usernameChangeForm label {
+#usernameChangeForm label,
+#passwordChangeForm label {
     display: block;
     margin-bottom: 8px;
     font-size: 18px; /* Larger label font */
@@ -209,7 +211,9 @@ footer ul {
 }
 
 #usernameChangeForm input[type="text"],
-#usernameChangeForm input[type="password"] {
+#usernameChangeForm input[type="password"],
+#passwordChangeForm input[type="text"],
+#passwordChangeForm input[type="password"] {
     width: 100%;
     padding: 12px 10px;
     margin-bottom: 16px; /* Spacing between form elements */
@@ -219,7 +223,8 @@ footer ul {
     box-sizing: border-box; /* Ensures padding does not affect width */
 }
 
-#usernameChangeForm button {
+#usernameChangeForm button,
+#passwordChangeForm button {
     padding: 10px 20px;
     font-size: 16px;
     color: white;
@@ -230,7 +235,8 @@ footer ul {
     transition: background-color 0.3s ease-in-out;
 }
 
-#usernameChangeForm button:hover {
+#usernameChangeForm button:hover,
+#passwordChangeForm button:hover {
     background-color: #f44336;
 }
 
