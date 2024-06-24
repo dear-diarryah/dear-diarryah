@@ -35,10 +35,6 @@
             <input type="text" id="nickname" name="nickname" placeholder="Enter your nickname" required>
           </div>
           <div class="form-group">
-            <label for="avatar">Avatar:</label>
-            <input type="file" id="avatar" name="avatar" accept="image/*">
-          </div>
-          <div class="form-group">
             <label for="biography">Biography:</label>
             <textarea id="biography" name="biography" placeholder="Tell us about yourself" required></textarea>
           </div>
@@ -46,13 +42,11 @@
           <div class="form-group">
             <label>Gender:</label>
             <div class="radio-buttons">
-              
               <label for="male">Male</label>
               <input type="radio" id="male" name="gender" value="Male">
               
               <label for="female">Female</label>
               <input type="radio" id="female" name="gender" value="Female">
-
             </div>
           </div>
           <div class="form-group">
@@ -110,9 +104,41 @@
         document.getElementById('age').disabled = false;
       }
 
-      function onSaveClicked() {
-        // Add logic to save the profile data
-        alert('Profile saved!');
+      async function onSaveClicked() {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          alert("No token found, please log in first.");
+          window.location.href = "/";
+          return;
+        }
+        const nickname = document.getElementById("nickname").value;
+        const biography = document.getElementById("biography").value;
+        const age = document.getElementById("age").value;
+        const rabies_date = document.getElementById("rabies_date").value;
+        const tetanus_date = document.getElementById("tetanus_date").value;
+        const borreliose_date = document.getElementById("borreliose_date").value;
+
+        console.log("Submitting profile update:", { nickname, biography, age, rabies_date, tetanus_date, borreliose_date });
+
+        try {
+          const response = await fetch("/updateProfile", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-access-token": token,
+            },
+            body: JSON.stringify({ nickname, biography, age, rabies_date, tetanus_date, borreliose_date }),
+          });
+          const data = await response.json();
+          if (response.ok) {
+            alert("Profile updated successfully");
+            window.location.href = "/profile.html";
+          } else {
+            alert("Failed to update profile");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+        }
         document.getElementById('nickname').disabled = true;
         document.getElementById('biography').disabled = true;
         document.getElementById('age').disabled = true;
