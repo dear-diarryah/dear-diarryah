@@ -176,9 +176,20 @@ app.post('/postEntry', verifyToken, async (req, res) => {
   }
 });
 
-app.put('/editEntry', verifyToken, (req, res) => {
-  const { entryId } = req.body;
-  //TODO
+app.put('/editEntry/:entryId', verifyToken, (req, res) => {
+  const entryId = req.params.entryId;
+  const { title, date, city, content } = req.body;
+
+  db.run("UPDATE entries SET title = ?, date = ?, city = ?, content = ? WHERE id = ? AND user_id = ?", 
+    [title, date, city, content, entryId, req.userId], function(err) {
+    if (err) {
+      return res.status(500).send('Error editing entry');
+    }
+    if (this.changes === 0) {
+      return res.status(404).send('Entry not found or not authorized');
+    }
+    res.status(200).send('Entry edited successfully');
+  });
 });
 
 app.delete('/deleteEntry', verifyToken, (req, res) => {
