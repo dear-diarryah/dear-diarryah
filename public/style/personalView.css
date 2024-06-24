@@ -185,7 +185,7 @@ Here startes the individual design of personalView
 }
 .fact {
     width: 90%;
-    background-color: #f0f2f5;
+    background-color: #babe8f;
     padding: 20px;
     margin-bottom: 20px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -201,7 +201,7 @@ Here startes the individual design of personalView
 }
 
 .fact:hover {
-    background-color: #dddddd; /* Background color on hover */
+    background-color: #c2ca74; /* Background color on hover */
     color: orange; /* Text color on hover */
     cursor: pointer; /* Changes cursor to pointer to indicate it's clickable */
 

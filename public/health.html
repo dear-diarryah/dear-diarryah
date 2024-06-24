@@ -27,33 +27,33 @@
         </li>
         <li class="nav-item"><a href="personalView.html">Home</a></li>
         <li class="nav-item"><a href="diary.html">Diary</a></li>
-        <li class="nav-item"><a href="health.html">Health</a></li>
+        <li class="nav-item"><a href="health.html">Find Doc</a></li>
         <li class="nav-item"><a href="profile.html">Profile</a></li>
         <li class ='nav-item'><a href="/" id="logoutButton">Logout</a></li>
       </ul>
     </nav>
     <main>
-        <div>
+        
             <form id="healthForm">
-                <textarea id="contentTextarea" placeholder="Health Entry"></textarea>
-                <input type="text" id="symptomes" placeholder="Symptomes" required>
+                <!-- <textarea id="contentTextarea" placeholder="Health Entry"></textarea>
+                <input type="text" id="symptomes" placeholder="Symptomes" required> -->
               
                 <input type="hidden" id="latitude" name="latitude">
                 <input type="hidden" id="longitude" name="longitude">
               
                 <div id="map"></div>
 
-                <div id="button-container">
+                <!-- <div id="button-container">
                     <button id="cancelButton" onclick="onCancelClicked()">Cancel</button>
                     <button id="findDocButton" onclick="onFindDocClicked()">Find Doc</button>
-                </div>
+                </div> -->
                 <script>
                     function onCancelClicked() {
                         window.location.href = './health.html'
                     }
                 </script>
             </form>
-          </div>
+          
 
     </main>
     <script>
@@ -86,8 +86,8 @@
         function onFindDocClicked(event) {
             event.preventDefault();  // Prevent form submission for demonstration
             const formData = {
-                healthEntry: document.getElementById('contentTextarea').value,
-                symptomes: document.getElementById('symptomes').value,
+                // healthEntry: document.getElementById('contentTextarea').value,
+                // symptomes: document.getElementById('symptomes').value,
                 latitude: document.getElementById('latitude').value,
                 longitude: document.getElementById('longitude').value,
             };

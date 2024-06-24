@@ -40,7 +40,6 @@ header {
     align-items: center;
     font-family:'ivan2';
     color:#fff;
-    border: solid red 2px
 }
 
 .headerTitle {
@@ -53,7 +52,6 @@ nav {
     grid-area: n;
     min-width: 128px;
     max-width: 192px;
-    border: solid green 2px;
     border-radius: 15px;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;;
     margin: 10px;
@@ -98,8 +96,7 @@ main {
     grid-area: m;
     display: block;
     justify-content: center;
-    align-items: center;
-    border: solid orange 2px;;     
+    align-items: center;     
     border-radius: 15px;           
     box-sizing: border-box;
     margin: 10px;
@@ -115,9 +112,7 @@ footer {
     align-items: center;
     font-family: 'Courier New', Courier, monospace;
     font-size: small;
-    color: #fff;
-    border: solid yellow 2px;
-    
+    color: #fff;    
 }
 
 footer ul {
@@ -185,6 +180,7 @@ Here startes the individual design of diary
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     background-color: #f9f9f9;
     max-width: 80vw;
+    height: 80%;
 }
 
 #healthForm input {
@@ -193,18 +189,18 @@ Here startes the individual design of diary
     box-sizing: border-box; 
 }
 
-#healthForm textarea {
+/* #healthForm textarea {
     margin-top: 20px;
     padding: 10px;
     box-sizing: border-box; 
-}
+} */
 
-#buttonContainer {
+/* #buttonContainer {
     display: grid;
     grid-template-columns: 1fr 1fr;
-}
+} */
 
-#findDocButton {
+/* #findDocButton {
     padding: 10px 20px;
     margin-right: 10px;
     margin-top: 10px;
@@ -215,9 +211,9 @@ Here startes the individual design of diary
     border: none;
     background-color: #230ee2;
     color: white;
-}
+} */
 
-#cancelButton {
+/* #cancelButton {
     padding: 10px 20px;
     margin-right: 10px;
     margin-top: 10px;
@@ -228,7 +224,7 @@ Here startes the individual design of diary
     border: none;
     background-color: #f44336;
     color: white;
-}
+} */
 
 #submitButton:hover, #cancelButton:hover {
     opacity: 0.8;

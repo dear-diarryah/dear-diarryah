@@ -224,20 +224,22 @@ footer ul {
 }
 
 .slider-container {
-
+    position: relative;
     margin: 0;
 }
 
 .slider-container input[type="range"] {
-    padding:0;
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 .slider-container output {
     position: absolute;
-    bottom: -25px; /* Position unter dem Slider */
-    left: +25; /* Startposition - wird durch JS überschrieben */
-    transform: translateX(-50%); /* Zentriert das output-Element horizontal */
-   
+    bottom: 30px; /* Position directly below the slider */
+    left: 50%; /* Start position - will be overwritten by JS */
+    transform: translateX(-50%); /* Center the output element horizontally */
 }
 
 label {
@@ -253,7 +255,7 @@ label {
     align-items: center;
     /* justify-content: space-between; */
     margin-top: 10px;
-    padding:10px;
+    
 }
 
 .vaccine label {
@@ -272,15 +274,27 @@ label {
 }
 .radio-buttons {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
+    width: 200px;
+    justify-content: space-between;
+}
+
+.radio-buttons .radio-container {
+    display: flex;
+    align-items: center;
 }
 
 .radio-buttons label {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 5px;
+    margin-right: 15px; /* Adjust this value as needed */
 }
 
 .radio-buttons input[type="radio"] {
     margin: 0;
+}
+legend {
+   
+    font-weight: bold;
+    font-family: 'ivan2';
+    margin-bottom: 10px;
+    color: #000000;
 }
