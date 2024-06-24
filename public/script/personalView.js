@@ -126,7 +126,7 @@ function displayEntries(entries) {
     editEntry.textContent = "Edit Entry";
     postElement.appendChild(editEntry);
     editEntry.addEventListener("click", function () {
-      window.location.href = "./diary.html"
+      window.location.href = "./edit.html?entryId=" + post.id;
     });
 
     const deleteEntry = document.createElement("button");

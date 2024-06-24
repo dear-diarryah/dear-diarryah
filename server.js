@@ -161,6 +161,16 @@ app.get("/getEntries", verifyToken, (req, res) => {
   );
 });
 
+app.get("/getEntry/:entryId", verifyToken, (req, res) => {
+  const entryId = req.params.entryId;
+  console.log(entryId);
+  db.get("SELECT * FROM entries WHERE id = ?", [ entryId ], (err, entries) => {
+      if (err) return res.status(500).send("Error on the server.");
+      res.status(200).send({ entries: entries });
+    }
+  );
+});
+
 app.post('/postEntry', verifyToken, async (req, res) => {
   const { title, date, city, content } = req.body;
   const userId = req.userId;
@@ -169,7 +179,7 @@ app.post('/postEntry', verifyToken, async (req, res) => {
     const weather = await getWeather(date, city);
     let weatherDescription = weather.forecast.forecastday[0].day.avgtemp_c;
 
-    db.run("INSERT INTO entries (user_id, title, date, city, weather, content) VALUES (?, ?, ?, ?, ?, ?)", [userId, title, formatDate(date), city, weatherDescription, content], function(err) {
+    db.run("INSERT INTO entries (user_id, title, date, city, weather, content) VALUES (?, ?, ?, ?, ?, ?)", [userId, title, date, city, weatherDescription, content], function(err) {
       if (err) {
         return res.status(500).send("Error posting entry");
       }
@@ -184,8 +194,8 @@ app.put('/editEntry/:entryId', verifyToken, (req, res) => {
   const entryId = req.params.entryId;
   const { title, date, city, content } = req.body;
 
-  db.run("UPDATE entries SET title = ?, date = ?, city = ?, content = ? WHERE id = ? AND user_id = ?", 
-    [title, date, city, content, entryId, req.userId], function(err) {
+  db.run("UPDATE entries SET title = ?, date = ?, city = ?, content = ? WHERE id = ?", 
+    [title, date, city, content, entryId], function(err) {
     if (err) {
       return res.status(500).send('Error editing entry');
     }
@@ -293,10 +303,10 @@ function verifyToken(req, res, next) {
   });
 }
 
-function formatDate(dateString) {
-  const [year, month, day] = dateString.split("-");
-  return `${day}.${month}.${year}`;
-};
+// function formatDate(dateString) {
+//   const [year, month, day] = dateString.split("-");
+//   return `${day}.${month}.${year}`;
+// };
 
 async function getWeather(date, city) {
   const apiKey = "4d04315071d04020aca153414241606";
