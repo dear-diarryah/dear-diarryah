@@ -42,7 +42,12 @@ document.getElementById("loginForm").addEventListener("submit", async function (
       if (data.auth) {
         // alert("Login successful");
         localStorage.setItem("token", data.token);
-        window.location.href = "/personalView.html";
+        console.log(data);
+        if (data.isAdmin) {
+          window.location.href = "/adminView.html";
+        } else {
+          window.location.href = "/personalView.html";
+        }
       } else {
         alert("Login failed");
       }

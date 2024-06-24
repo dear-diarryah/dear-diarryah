@@ -23,20 +23,24 @@ const db = new sqlite3.Database(DB_FILE, (err) => {
   } else {
     console.log("Connected to the SQLite database.");
     db.run(
-      "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT, email TEXT, password TEXT)"
+      "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT, email TEXT, password TEXT, isAdmin BOOLEAN)"
     );
     db.run(
       "CREATE TABLE IF NOT EXISTS entries (id INTEGER PRIMARY KEY, user_id INTEGER, title TEXT, date TEXT, city TEXT, weather TEXT, content TEXT, FOREIGN KEY(user_id) REFERENCES users(id))"
     );
+    db.run(
+      "CREATE TABLE IF NOT EXISTS profiles (id INTEGER PRIMARY KEY, user_id INTEGER, nickname TEXT, biography TEXT, age INTEGER, rabies_date TEXT, tetanus_date TEXT, borreliose_date TEXT, FOREIGN KEY(user_id) REFERENCES users(id))"
+    );
   }
 });
+
 
 app.post("/signUp", (req, res) => {
   const { username, email, password } = req.body;
   const hashedPassword = bcrypt.hashSync(password, 8);
 
   db.run(
-    "INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
+    "INSERT INTO users (username, email, password, isAdmin) VALUES (?, ?, ?, 0)",
     [username, email, hashedPassword],
     function (err) {
       if (err) {
@@ -61,25 +65,93 @@ app.post("/login", (req, res) => {
     if (!passwordIsValid)
       return res.status(401).send({ auth: false, token: null });
 
-    const token = jwt.sign({ id: user.id }, "your_secret_key", {
+    const token = jwt.sign({ id: user.id, isAdmin: user.isAdmin }, "your_secret_key", {
       expiresIn: 86400,
     });
-    res.status(200).send({ auth: true, token: token });
+    res.status(200).send({ auth: true, token: token, isAdmin: user.isAdmin });
   });
 });
 
+app.get("/admin/getUsers",  verifyToken, (req, res) => {
+  if (!req.user.isAdmin) {
+    return res.status(403).json({ error: "Access forbidden, you are not an admin." });
+  }
 
-app.get("/getUsers",  (req, res) => {
-  db.all("SELECT * FROM users", [], (err, user) => {
+  db.all("SELECT * FROM users", [], (err, users) => {
     if (err) {
       res.status(500).send("Error fetching users");
       return;
     }
-    res.status(200).send({ user: user });
+    res.status(200).send({ users: users });
   });
 });
 
+app.put("/admin/updateUsername/:userId", verifyToken, (req, res) => {
+  const userId = req.params.userId;
+  const newUsername = req.body.newUsername;
 
+  if (!req.user.isAdmin) {
+    return res.status(403).json({ error: "Access forbidden, you are not an admin." });
+  }
+
+  db.run("UPDATE users SET username = ? WHERE id = ?", [newUsername, userId], (err) => {
+    if (err) {
+        res.status(500).json({ error: "Error while updating username." });
+    } else {
+        res.json({ message: "Username has been updated successfully!" });
+    }
+  });
+});
+
+app.put("/admin/updatePassword/:userId", verifyToken, (req, res) => {
+  const userId = req.params.userId;
+  const newPassword = req.body.newPassword;
+  const hashedPassword = bcrypt.hashSync(newPassword, 8);
+
+  if (!req.user.isAdmin) {
+    return res.status(403).json({ error: "Access forbidden, you are not an admin." });
+  }
+
+  db.run("UPDATE users SET password = ? WHERE id = ?", [hashedPassword, userId], (err) => {
+    if (err) {
+        res.status(500).json({ error: "Error while updating password." });
+    } else {
+        res.json({ message: "Password has been updated successfully!" });
+    }
+  });
+});
+
+app.delete('/admin/deleteUser/:userId', verifyToken, (req, res) => {
+  const userId = req.params.userId;
+
+  if (!req.user.isAdmin) {
+    return res.status(403).json({ error: "Access forbidden, you are not an admin." });
+  }
+
+  db.serialize(() => {
+    db.run("BEGIN TRANSACTION");
+
+    db.run("DELETE FROM entries WHERE user_id = ?", [userId], function(err) {
+      if (err) {
+        db.run("ROLLBACK");
+        return res.status(500).json({ error: "Error deleting user's entries" });
+      }
+
+      db.run("DELETE FROM users WHERE id = ?", [userId], function(err) {
+        if (err) {
+          db.run("ROLLBACK");
+          return res.status(500).json({ error: "Error deleting user" });
+        }
+        if (this.changes === 0) {
+          db.run("ROLLBACK");
+          return res.status(404).json({ error: "User not found or not authorized" });
+        }
+        db.run("COMMIT");
+        res.status(200).json({ message: "User and their entries deleted successfully" });
+      });
+    });
+  });
+});
 
 app.get("/getEntries", verifyToken, (req, res) => {
   db.all("SELECT * FROM entries WHERE user_id = ?", [req.userId], (err, entries) => {
@@ -108,9 +180,20 @@ app.post('/postEntry', verifyToken, async (req, res) => {
   }
 });
 
-app.put('/editEntry', verifyToken, (req, res) => {
-  const { entryId } = req.body;
-  //TODO
+app.put('/editEntry/:entryId', verifyToken, (req, res) => {
+  const entryId = req.params.entryId;
+  const { title, date, city, content } = req.body;
+
+  db.run("UPDATE entries SET title = ?, date = ?, city = ?, content = ? WHERE id = ? AND user_id = ?", 
+    [title, date, city, content, entryId, req.userId], function(err) {
+    if (err) {
+      return res.status(500).send('Error editing entry');
+    }
+    if (this.changes === 0) {
+      return res.status(404).send('Entry not found or not authorized');
+    }
+    res.status(200).send('Entry edited successfully');
+  });
 });
 
 app.delete('/deleteEntry', verifyToken, (req, res) => {
@@ -127,6 +210,63 @@ app.delete('/deleteEntry', verifyToken, (req, res) => {
   });
 });
 
+app.post('/updateProfile', verifyToken, (req, res) => {
+  const { nickname, biography, age, rabies_date, tetanus_date, borreliose_date } = req.body;
+  const userId = req.userId;
+
+  db.get("SELECT * FROM profiles WHERE user_id = ?", [userId], (err, row) => {
+    if (err) {
+      return res.status(500).send("Error checking profile existence");
+    }
+
+    if (row) {
+      db.run("UPDATE profiles SET nickname = ?, biography = ?, age = ?, rabies_date = ?, tetanus_date = ?, borreliose_date = ? WHERE user_id = ?", 
+        [nickname, biography, age, rabies_date, tetanus_date, borreliose_date, userId], function(err) {
+        if (err) {
+          return res.status(500).send("Error updating profile");
+        }
+        res.status(200).send({ message: "Profile updated successfully" });
+      });
+    } else {
+      db.run("INSERT INTO profiles (user_id, nickname, biography, age, rabies_date, tetanus_date, borreliose_date) VALUES (?, ?, ?, ?, ?, ?, ?)", 
+        [userId, nickname, biography, age, rabies_date, tetanus_date, borreliose_date], function(err) {
+        if (err) {
+          return res.status(500).send("Error creating profile");
+        }
+        res.status(200).send({ message: "Profile created successfully" });
+      });
+    }
+  });
+});
+
+app.get('/getProfile', verifyToken, (req, res) => {
+  const userId = req.userId;
+
+  db.get("SELECT * FROM profiles WHERE user_id = ?", [userId], (err, row) => {
+    if (err) {
+      return res.status(500).send("Error fetching profile");
+    }
+    res.status(200).send({ profile: row || null });
+  });
+});
+
+/*https://dogapi.dog/docs/api-v2*/
+app.get('/api/fact', async (req, res) => {
+  const url = `https://dogapi.dog/api/v2/facts?limit=1`;
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    if (response.status !== 200) {
+      throw new Error(data.error.message);
+    }
+    res.json(data);
+  } catch (error) {
+    console.error("Error fetching fact data:", error);
+    res.status(500).json({ error: "Error fetching fact data" });
+  }
+});
+
 app.listen(port, "0.0.0.0", () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
@@ -138,14 +278,20 @@ function verifyToken(req, res, next) {
 
   jwt.verify(token, "your_secret_key", (err, decoded) => {
     if (err)
-      return res
-        .status(500)
-        .send({ auth: false, message: "Failed to authenticate token." });
+      return res.status(500).send({ auth: false, message: "Failed to authenticate token." });
 
     req.userId = decoded.id;
-    next();
+    req.user = decoded;
+
+    db.get("SELECT isAdmin FROM users WHERE id = ?", [req.userId], (err, row) => {
+      if (err || !row) {
+        return res.status(500).send({ auth: false, message: "Failed to verify admin status." });
+      }
+      req.user.isAdmin = row.isAdmin;
+      next();
+    });
   });
-};
+}
 
 function formatDate(dateString) {
   const [year, month, day] = dateString.split("-");
@@ -168,35 +314,3 @@ async function getWeather(date, city) {
     throw error;
   }
 };
-
-/*https://dogapi.dog/docs/api-v2*/
-app.get('/api/fact', async (req, res) => {
-  const url = `https://dogapi.dog/api/v2/facts?limit=1`;
-
-  try {
-    const response = await fetch(url);
-    const data = await response.json();
-
-    if (response.status !== 200) {
-      throw new Error(data.error.message);
-    }
-
-    res.json(data);
-  } catch (error) {
-    console.error("Error fetching fact data:", error);
-    res.status(500).json({ error: "Error fetching fact data" });
-  }
-});
-
-app.put('/api/users/:userId', (req, res) => {
-  const userId = req.params.id;
-  const newUsername = req.body.newUsername;
-
-  db.run('UPDATE users SET username = ? WHERE id = ?', [newUsername, userId], (err) => {
-    if (err) {
-        res.status(500).json({ error: 'Fehler beim Aktualisieren des Benutzernamens' });
-    } else {
-        res.json({ message: 'Benutzername erfolgreich aktualisiert' });
-    }
-  });
-});

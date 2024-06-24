@@ -1,5 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
-  // Check for authentication token
+document.addEventListener("DOMContentLoaded", async function() {
   const token = localStorage.getItem("token");
   if (!token) {
     alert("No token found, please log in first.");
@@ -7,56 +6,65 @@ document.addEventListener("DOMContentLoaded", function() {
     return;
   }
 
-  // Enable or disable date inputs based on vaccine selection
-  const vaccines = ["rabies", "tetanus", "influenza"];
-  vaccines.forEach(vaccine => {
-      const selectElement = document.getElementById(vaccine);
-      const dateInput = document.getElementById(vaccine + "_date");
+  try {
+    const response = await fetch("/getProfile", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-access-token": token,
+      },
+    });
+    if (response.ok) {
+      const data = await response.json();
+      const profile = data.profile;
 
-      selectElement.addEventListener('change', function() {
-          if (this.value === "Yes") {
-              dateInput.disabled = false;
-          } else {
-              dateInput.disabled = true;
-              dateInput.value = ''; // Clear the date input if "No" is selected
-          }
-      });
-  });
-
-  // Handle form submission
-  document.getElementById("profileForm").addEventListener("submit", async function (event) {
-      event.preventDefault();
-      const nickname = document.getElementById("nickname").value;
-      const biography = document.getElementById("biography").value;
-      const age = document.getElementById("age").value;
-
-      try {
-          const response = await fetch("/updateProfile", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "x-access-token": token,
-            },
-            body: JSON.stringify({ nickname, biography, age }),
-          });
-          const data = await response.json();
-          if (response.ok) {
-            alert("Profile updated successfully");
-            window.location.href = "/profile.html";
-          } else {
-            alert("Failed to update profile");
-          }
-      } catch (error) {
-          console.error("Error:", error);
+      if (profile) {
+        document.getElementById("nickname").value = profile.nickname || "";
+        document.getElementById("biography").value = profile.biography || "";
+        document.getElementById("age").value = profile.age || 0;
+        document.getElementById("ageOutput").value = profile.age || 0;
+        if (profile.rabies_date) {
+          document.getElementById("rabies").value = "Yes";
+          document.getElementById("rabies_date").value = profile.rabies_date;
+          document.getElementById("rabies_date").disabled = false;
+        }
+        if (profile.tetanus_date) {
+          document.getElementById("tetanus").value = "Yes";
+          document.getElementById("tetanus_date").value = profile.tetanus_date;
+          document.getElementById("tetanus_date").disabled = false;
+        }
+        if (profile.borreliose_date) {
+          document.getElementById("borreliose").value = "Yes";
+          document.getElementById("borreliose_date").value = profile.borreliose_date;
+          document.getElementById("borreliose_date").disabled = false;
+        }
       }
+    } else {
+      console.error("Failed to fetch profile");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+
+  // Enable or disable date inputs based on vaccine selection
+  const vaccines = ["rabies", "tetanus", "borreliose"];
+  vaccines.forEach(vaccine => {
+    const selectElement = document.getElementById(vaccine);
+    const dateInput = document.getElementById(vaccine + "_date");
+
+    selectElement.addEventListener('change', function() {
+      if (this.value === "Yes") {
+        dateInput.disabled = false;
+      } else {
+        dateInput.disabled = true;
+        dateInput.value = ''; // Clear the date input if "No" is selected
+      }
+    });
   });
 
-  // Logout button functionality
-  document.getElementById("logoutButton").addEventListener("click", function (event) {
+  document.getElementById("logoutButton").addEventListener("click", function(event) {
     event.preventDefault();
     localStorage.removeItem("token");
     window.location.href = "/";
   });
-
-
 });
