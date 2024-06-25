@@ -7,6 +7,7 @@ const sqlite3 = require("sqlite3").verbose();
 const fs = require("fs");
 const path = require("path");
 const swaggerUi = require("swagger-ui-express");
+const xml = require('xml');
 
 const app = express();
 const port = 3000;
@@ -16,6 +17,7 @@ const SWAGGER_FILE = JSON.parse(fs.readFileSync(path.join(__dirname, "swagger.js
 app.use(bodyParser.json());
 app.use(express.static("public"));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(SWAGGER_FILE));
+app.use(respondWithFormat);
 
 const db = new sqlite3.Database(DB_FILE, (err) => {
   if (err) {
@@ -44,12 +46,12 @@ app.post("/signUp", (req, res) => {
     [username, email, hashedPassword],
     function (err) {
       if (err) {
-        return res.status(500).send("Error registering new user");
+        return res.status(500).sendFormatted({ error: "Error registering new user" });
       }
       const token = jwt.sign({ id: this.lastID }, "your_secret_key", {
         expiresIn: 86400,
       });
-      res.status(200).send({ auth: true, token: token });
+      res.status(200).sendFormatted({ auth: true, token: token });
     }
   );
 });
@@ -58,31 +60,31 @@ app.post("/login", (req, res) => {
   const { username, password } = req.body;
 
   db.get("SELECT * FROM users WHERE username = ?", [username], (err, user) => {
-    if (err) return res.status(500).send("Error on the server.");
-    if (!user) return res.status(404).send("No user found.");
+    if (err) return res.status(500).sendFormatted({ error: "Error on the server." });
+    if (!user) return res.status(404).sendFormatted({ error: "No user found." });
 
     const passwordIsValid = bcrypt.compareSync(password, user.password);
     if (!passwordIsValid)
-      return res.status(401).send({ auth: false, token: null });
+      return res.status(401).sendFormatted({ auth: false, token: null });
 
     const token = jwt.sign({ id: user.id, isAdmin: user.isAdmin }, "your_secret_key", {
       expiresIn: 86400,
     });
-    res.status(200).send({ auth: true, token: token, isAdmin: user.isAdmin });
+    res.status(200).sendFormatted({ auth: true, token: token, isAdmin: user.isAdmin });
   });
 });
 
-app.get("/admin/getUsers",  verifyToken, (req, res) => {
+app.get("/admin/getUsers", verifyToken, (req, res) => {
   if (!req.user.isAdmin) {
-    return res.status(403).json({ error: "Access forbidden, you are not an admin." });
+    return res.status(403).sendFormatted({ error: "Access forbidden, you are not an admin." });
   }
 
   db.all("SELECT * FROM users", [], (err, users) => {
     if (err) {
-      res.status(500).send("Error fetching users");
+      res.status(500).sendFormatted({ error: "Error fetching users" });
       return;
     }
-    res.status(200).send({ users: users });
+    res.status(200).sendFormatted({ users: users });
   });
 });
 
@@ -91,14 +93,14 @@ app.put("/admin/updateUsername/:userId", verifyToken, (req, res) => {
   const newUsername = req.body.newUsername;
 
   if (!req.user.isAdmin) {
-    return res.status(403).json({ error: "Access forbidden, you are not an admin." });
+    return res.status(403).sendFormatted({ error: "Access forbidden, you are not an admin." });
   }
 
   db.run("UPDATE users SET username = ? WHERE id = ?", [newUsername, userId], (err) => {
     if (err) {
-        res.status(500).json({ error: "Error while updating username." });
+        res.status(500).sendFormatted({ error: "Error while updating username." });
     } else {
-        res.json({ message: "Username has been updated successfully!" });
+        res.sendFormatted({ message: "Username has been updated successfully!" });
     }
   });
 });
@@ -109,14 +111,14 @@ app.put("/admin/updatePassword/:userId", verifyToken, (req, res) => {
   const hashedPassword = bcrypt.hashSync(newPassword, 8);
 
   if (!req.user.isAdmin) {
-    return res.status(403).json({ error: "Access forbidden, you are not an admin." });
+    return res.status(403).sendFormatted({ error: "Access forbidden, you are not an admin." });
   }
 
   db.run("UPDATE users SET password = ? WHERE id = ?", [hashedPassword, userId], (err) => {
     if (err) {
-        res.status(500).json({ error: "Error while updating password." });
+        res.status(500).sendFormatted({ error: "Error while updating password." });
     } else {
-        res.json({ message: "Password has been updated successfully!" });
+        res.sendFormatted({ message: "Password has been updated successfully!" });
     }
   });
 });
@@ -125,7 +127,7 @@ app.delete('/admin/deleteUser/:userId', verifyToken, (req, res) => {
   const userId = req.params.userId;
 
   if (!req.user.isAdmin) {
-    return res.status(403).json({ error: "Access forbidden, you are not an admin." });
+    return res.status(403).sendFormatted({ error: "Access forbidden, you are not an admin." });
   }
 
   db.serialize(() => {
@@ -134,20 +136,20 @@ app.delete('/admin/deleteUser/:userId', verifyToken, (req, res) => {
     db.run("DELETE FROM entries WHERE user_id = ?", [userId], function(err) {
       if (err) {
         db.run("ROLLBACK");
-        return res.status(500).json({ error: "Error deleting user's entries" });
+        return res.status(500).sendFormatted({ error: "Error deleting user's entries" });
       }
 
       db.run("DELETE FROM users WHERE id = ?", [userId], function(err) {
         if (err) {
           db.run("ROLLBACK");
-          return res.status(500).json({ error: "Error deleting user" });
+          return res.status(500).sendFormatted({ error: "Error deleting user" });
         }
         if (this.changes === 0) {
           db.run("ROLLBACK");
-          return res.status(404).json({ error: "User not found or not authorized" });
+          return res.status(404).sendFormatted({ error: "User not found or not authorized" });
         }
         db.run("COMMIT");
-        res.status(200).json({ message: "User and their entries deleted successfully" });
+        res.status(200).sendFormatted({ message: "User and their entries deleted successfully" });
       });
     });
   });
@@ -155,8 +157,8 @@ app.delete('/admin/deleteUser/:userId', verifyToken, (req, res) => {
 
 app.get("/getEntries", verifyToken, (req, res) => {
   db.all("SELECT * FROM entries WHERE user_id = ?", [req.userId], (err, entries) => {
-      if (err) return res.status(500).send("Error on the server.");
-      res.status(200).send({ entries: entries });
+      if (err) return res.status(500).sendFormatted({ error: "Error on the server." });
+      res.status(200).sendFormatted({ entries: entries });
     }
   );
 });
@@ -165,8 +167,8 @@ app.get("/getEntry/:entryId", verifyToken, (req, res) => {
   const entryId = req.params.entryId;
   console.log(entryId);
   db.get("SELECT * FROM entries WHERE id = ?", [ entryId ], (err, entries) => {
-      if (err) return res.status(500).send("Error on the server.");
-      res.status(200).send({ entries: entries });
+      if (err) return res.status(500).sendFormatted({ error: "Error on the server." });
+      res.status(200).sendFormatted({ entries: entries });
     }
   );
 });
@@ -181,12 +183,12 @@ app.post('/postEntry', verifyToken, async (req, res) => {
 
     db.run("INSERT INTO entries (user_id, title, date, city, weather, content) VALUES (?, ?, ?, ?, ?, ?)", [userId, title, date, city, weatherDescription, content], function(err) {
       if (err) {
-        return res.status(500).send("Error posting entry");
+        return res.status(500).sendFormatted({ error: "Error posting entry" });
       }
-      res.status(200).send({ message: "Entry posted successfully" });
+      res.status(200).sendFormatted({ message: "Entry posted successfully" });
     });
   } catch {
-    res.status(500).send("Error fetching weather data");
+    res.status(500).sendFormatted({ error: "Error fetching weather data" });
   }
 });
 
@@ -197,12 +199,12 @@ app.put('/editEntry/:entryId', verifyToken, (req, res) => {
   db.run("UPDATE entries SET title = ?, date = ?, city = ?, content = ? WHERE id = ?", 
     [title, date, city, content, entryId], function(err) {
     if (err) {
-      return res.status(500).send('Error editing entry');
+      return res.status(500).sendFormatted({ error: 'Error editing entry' });
     }
     if (this.changes === 0) {
-      return res.status(404).send('Entry not found or not authorized');
+      return res.status(404).sendFormatted({ error: 'Entry not found or not authorized' });
     }
-    res.status(200).send('Entry edited successfully');
+    res.status(200).sendFormatted({ message: 'Entry edited successfully' });
   });
 });
 
@@ -211,12 +213,12 @@ app.delete('/deleteEntry', verifyToken, (req, res) => {
 
   db.run("DELETE FROM entries WHERE id = ? AND user_id = ?", [entryId, req.userId], function(err) {
     if (err) {
-      return res.status(500).send('Error deleting entry');
+      return res.status(500).sendFormatted({ error: 'Error deleting entry' });
     }
     if (this.changes === 0) {
-      return res.status(404).send('Entry not found or not authorized');
+      return res.status(404).sendFormatted({ error: 'Entry not found or not authorized' });
     }
-    res.status(200).send('Entry deleted successfully');
+    res.status(200).sendFormatted({ message: 'Entry deleted successfully' });
   });
 });
 
@@ -226,24 +228,24 @@ app.post('/updateProfile', verifyToken, (req, res) => {
 
   db.get("SELECT * FROM profiles WHERE user_id = ?", [userId], (err, row) => {
     if (err) {
-      return res.status(500).send("Error checking profile existence");
+      return res.status(500).sendFormatted({ error: "Error checking profile existence" });
     }
 
     if (row) {
       db.run("UPDATE profiles SET nickname = ?, biography = ?, age = ?, rabies_date = ?, tetanus_date = ?, borreliose_date = ?, gender = ? WHERE user_id = ?", 
         [nickname, biography, age, rabies_date, tetanus_date, borreliose_date, gender, userId], function(err) {
         if (err) {
-          return res.status(500).send("Error updating profile");
+          return res.status(500).sendFormatted({ error: "Error updating profile" });
         }
-        res.status(200).send({ message: "Profile updated successfully" });
+        res.status(200).sendFormatted({ message: "Profile updated successfully" });
       });
     } else {
       db.run("INSERT INTO profiles (user_id, nickname, biography, age, rabies_date, tetanus_date, borreliose_date, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", 
         [userId, nickname, biography, age, rabies_date, tetanus_date, borreliose_date, gender], function(err) {
         if (err) {
-          return res.status(500).send("Error creating profile");
+          return res.status(500).sendFormatted({ error: "Error creating profile" });
         }
-        res.status(200).send({ message: "Profile created successfully" });
+        res.status(200).sendFormatted({ message: "Profile created successfully" });
       });
     }
   });
@@ -254,9 +256,9 @@ app.get('/getProfile', verifyToken, (req, res) => {
 
   db.get("SELECT * FROM profiles WHERE user_id = ?", [userId], (err, row) => {
     if (err) {
-      return res.status(500).send("Error fetching profile");
+      return res.status(500).sendFormatted({ error: "Error fetching profile" });
     }
-    res.status(200).send({ profile: row || null });
+    res.status(200).sendFormatted({ profile: row || null });
   });
 });
 
@@ -270,17 +272,17 @@ app.get('/api/fact', async (req, res) => {
     if (response.status !== 200) {
       throw new Error(data.error.message);
     }
-    res.json(data);
+    res.sendFormatted(data);
   } catch (error) {
     console.error("Error fetching fact data:", error);
-    res.status(500).json({ error: "Error fetching fact data" });
+    res.status(500).sendFormatted({ error: "Error fetching fact data" });
   }
 });
 
 // TomTom API Endpoint
 app.get('/api/getTomTomApiKey', (req, res) => {
   const apiKey = 'V6oxeT1AGqkr1FA1CzGwZoafK2DzASxH'
-  res.json({ apiKey });
+  res.sendFormatted({ apiKey });
 });
 
 app.get('/api/veterinarians', async (req, res) => {
@@ -289,10 +291,10 @@ app.get('/api/veterinarians', async (req, res) => {
   try {
     const response = await fetch(`https://api.tomtom.com/search/2/search/veterinarian.json?key=${apiKey}&lat=48.2082&lon=16.3738&radius=15000&limit=50`);
     const data = await response.json();
-    res.status(200).json(data);
+    res.status(200).sendFormatted(data);
   } catch (error) {
     console.error("Error fetching data from TomTom API:", error);
-    res.status(500).json({ error: "Error fetching data from TomTom API" });
+    res.status(500).sendFormatted({ error: "Error fetching data from TomTom API" });
   }
 });
 
@@ -303,18 +305,18 @@ app.listen(port, "0.0.0.0", () => {
 function verifyToken(req, res, next) {
   const token = req.headers["x-access-token"];
   if (!token)
-    return res.status(403).send({ auth: false, message: "No token provided." });
+    return res.status(403).sendFormatted({ auth: false, message: "No token provided." });
 
   jwt.verify(token, "your_secret_key", (err, decoded) => {
     if (err)
-      return res.status(500).send({ auth: false, message: "Failed to authenticate token." });
+      return res.status(500).sendFormatted({ auth: false, message: "Failed to authenticate token." });
 
     req.userId = decoded.id;
     req.user = decoded;
 
     db.get("SELECT isAdmin FROM users WHERE id = ?", [req.userId], (err, row) => {
       if (err || !row) {
-        return res.status(500).send({ auth: false, message: "Failed to verify admin status." });
+        return res.status(500).sendFormatted({ auth: false, message: "Failed to verify admin status." });
       }
       req.user.isAdmin = row.isAdmin;
       next();
@@ -322,10 +324,17 @@ function verifyToken(req, res, next) {
   });
 }
 
-// function formatDate(dateString) {
-//   const [year, month, day] = dateString.split("-");
-//   return `${day}.${month}.${year}`;
-// };
+function respondWithFormat(req, res, next) {
+  res.sendFormatted = (data) => {
+    if (req.headers['accept'] === 'application/xml') {
+      res.header('Content-Type', 'application/xml');
+      res.send(xml(data));
+    } else {
+      res.json(data);
+    }
+  };
+  next();
+}
 
 async function getWeather(date, city) {
   const apiKey = "4d04315071d04020aca153414241606";
