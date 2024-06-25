@@ -29,7 +29,7 @@ const db = new sqlite3.Database(DB_FILE, (err) => {
       "CREATE TABLE IF NOT EXISTS entries (id INTEGER PRIMARY KEY, user_id INTEGER, title TEXT, date TEXT, city TEXT, weather TEXT, content TEXT, FOREIGN KEY(user_id) REFERENCES users(id))"
     );
     db.run(
-      "CREATE TABLE IF NOT EXISTS profiles (id INTEGER PRIMARY KEY, user_id INTEGER, nickname TEXT, biography TEXT, age INTEGER, rabies_date TEXT, tetanus_date TEXT, borreliose_date TEXT, FOREIGN KEY(user_id) REFERENCES users(id))"
+      "CREATE TABLE IF NOT EXISTS profiles (id INTEGER PRIMARY KEY, user_id INTEGER, nickname TEXT, biography TEXT, age INTEGER, rabies_date TEXT, tetanus_date TEXT, borreliose_date TEXT, gender TEXT, FOREIGN KEY(user_id) REFERENCES users(id))"
     );
   }
 });
@@ -221,7 +221,7 @@ app.delete('/deleteEntry', verifyToken, (req, res) => {
 });
 
 app.post('/updateProfile', verifyToken, (req, res) => {
-  const { nickname, biography, age, rabies_date, tetanus_date, borreliose_date } = req.body;
+  const { nickname, biography, age, rabies_date, tetanus_date, borreliose_date, gender } = req.body;
   const userId = req.userId;
 
   db.get("SELECT * FROM profiles WHERE user_id = ?", [userId], (err, row) => {
@@ -230,16 +230,16 @@ app.post('/updateProfile', verifyToken, (req, res) => {
     }
 
     if (row) {
-      db.run("UPDATE profiles SET nickname = ?, biography = ?, age = ?, rabies_date = ?, tetanus_date = ?, borreliose_date = ? WHERE user_id = ?", 
-        [nickname, biography, age, rabies_date, tetanus_date, borreliose_date, userId], function(err) {
+      db.run("UPDATE profiles SET nickname = ?, biography = ?, age = ?, rabies_date = ?, tetanus_date = ?, borreliose_date = ?, gender = ? WHERE user_id = ?", 
+        [nickname, biography, age, rabies_date, tetanus_date, borreliose_date, gender, userId], function(err) {
         if (err) {
           return res.status(500).send("Error updating profile");
         }
         res.status(200).send({ message: "Profile updated successfully" });
       });
     } else {
-      db.run("INSERT INTO profiles (user_id, nickname, biography, age, rabies_date, tetanus_date, borreliose_date) VALUES (?, ?, ?, ?, ?, ?, ?)", 
-        [userId, nickname, biography, age, rabies_date, tetanus_date, borreliose_date], function(err) {
+      db.run("INSERT INTO profiles (user_id, nickname, biography, age, rabies_date, tetanus_date, borreliose_date, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", 
+        [userId, nickname, biography, age, rabies_date, tetanus_date, borreliose_date, gender], function(err) {
         if (err) {
           return res.status(500).send("Error creating profile");
         }

@@ -38,6 +38,9 @@ document.addEventListener("DOMContentLoaded", async function() {
           document.getElementById("borreliose_date").value = profile.borreliose_date;
           document.getElementById("borreliose_date").disabled = false;
         }
+        if (profile.gender) {
+          document.querySelector(`input[name="gender"][value="${profile.gender}"]`).checked = true;
+        }
       }
     } else {
       console.error("Failed to fetch profile");

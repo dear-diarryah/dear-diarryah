@@ -11,7 +11,6 @@
 
 <body>
     <header>
-
       <h1 class="headerTitle">Dear Diarryah</h1>
     </header>
     <nav>
@@ -120,8 +119,9 @@
         const rabies_date = document.getElementById("rabies_date").value;
         const tetanus_date = document.getElementById("tetanus_date").value;
         const borreliose_date = document.getElementById("borreliose_date").value;
+        const gender = document.querySelector('input[name="gender"]:checked').value;
 
-        console.log("Submitting profile update:", { nickname, biography, age, rabies_date, tetanus_date, borreliose_date });
+        console.log("Submitting profile update:", { nickname, biography, age, rabies_date, tetanus_date, borreliose_date, gender });
 
         try {
           const response = await fetch("/updateProfile", {
@@ -130,7 +130,7 @@
               "Content-Type": "application/json",
               "x-access-token": token,
             },
-            body: JSON.stringify({ nickname, biography, age, rabies_date, tetanus_date, borreliose_date }),
+            body: JSON.stringify({ nickname, biography, age, rabies_date, tetanus_date, borreliose_date, gender }),
           });
           const data = await response.json();
           if (response.ok) {
@@ -156,8 +156,6 @@
       document.getElementById('biography').disabled = true;
       document.getElementById('age').disabled = true;
 
-
-
       function updateOutput(slider) {
         var output = document.getElementById('ageOutput');
         output.value = slider.value;
@@ -171,7 +169,6 @@
       }
     </script>
 
-
     <footer>
       <ul>
         <li class="footer-item">&copy; Dear Diarryah</li>
@@ -183,5 +180,4 @@
       </ul>
     </footer>
   </body>
-
 </html>
