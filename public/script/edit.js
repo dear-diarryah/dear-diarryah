@@ -15,7 +15,9 @@ document.addEventListener("DOMContentLoaded", function () {
       const city = document.getElementById("cityInput").value;
       const content = document.getElementById("contentTextarea").value;
 
-      const entryId = new URLSearchParams(window.location.search).get("entryId");
+      const entryId = new URLSearchParams(window.location.search).get(
+        "entryId"
+      );
       try {
         const response = await fetch(`/editEntry/${entryId}`, {
           method: "PUT",
@@ -25,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
           },
           body: JSON.stringify({ title, date, city, content }),
         });
-        
+
         if (response.ok) {
           // alert("Entry posted successfully");
           window.location.href = "/personalView.html";
@@ -44,17 +46,16 @@ document.addEventListener("DOMContentLoaded", function () {
 function setEntry(entry) {
   document.getElementById("titleInput").value = entry?.title;
   console.log(entry.date);
-  console.log(new Date (entry.date));
+  console.log(new Date(entry.date));
   document.getElementById("dateInput").value = entry.date;
   document.getElementById("cityInput").value = entry?.city;
   document.getElementById("contentTextarea").value = entry?.content;
-
 }
 
 function formatDate(dateString) {
-    const [year, month, day] = dateString.split(".");
-    return `${year}-${month}-${day}`;
-  };
+  const [year, month, day] = dateString.split(".");
+  return `${year}-${month}-${day}`;
+}
 
 async function fetchEntryData() {
   const token = localStorage.getItem("token");

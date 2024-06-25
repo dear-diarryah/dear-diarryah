@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", async function() {
+document.addEventListener("DOMContentLoaded", async function () {
   const token = localStorage.getItem("token");
   if (!token) {
     alert("No token found, please log in first.");
@@ -35,11 +35,14 @@ document.addEventListener("DOMContentLoaded", async function() {
         }
         if (profile.borreliose_date) {
           document.getElementById("borreliose").value = "Yes";
-          document.getElementById("borreliose_date").value = profile.borreliose_date;
+          document.getElementById("borreliose_date").value =
+            profile.borreliose_date;
           document.getElementById("borreliose_date").disabled = false;
         }
         if (profile.gender) {
-          document.querySelector(`input[name="gender"][value="${profile.gender}"]`).checked = true;
+          document.querySelector(
+            `input[name="gender"][value="${profile.gender}"]`
+          ).checked = true;
         }
       }
     } else {
@@ -51,23 +54,25 @@ document.addEventListener("DOMContentLoaded", async function() {
 
   // Enable or disable date inputs based on vaccine selection
   const vaccines = ["rabies", "tetanus", "borreliose"];
-  vaccines.forEach(vaccine => {
+  vaccines.forEach((vaccine) => {
     const selectElement = document.getElementById(vaccine);
     const dateInput = document.getElementById(vaccine + "_date");
 
-    selectElement.addEventListener('change', function() {
+    selectElement.addEventListener("change", function () {
       if (this.value === "Yes") {
         dateInput.disabled = false;
       } else {
         dateInput.disabled = true;
-        dateInput.value = ''; // Clear the date input if "No" is selected
+        dateInput.value = ""; // Clear the date input if "No" is selected
       }
     });
   });
 
-  document.getElementById("logoutButton").addEventListener("click", function(event) {
-    event.preventDefault();
-    localStorage.removeItem("token");
-    window.location.href = "/";
-  });
+  document
+    .getElementById("logoutButton")
+    .addEventListener("click", function (event) {
+      event.preventDefault();
+      localStorage.removeItem("token");
+      window.location.href = "/";
+    });
 });

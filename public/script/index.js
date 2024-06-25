@@ -1,4 +1,6 @@
-document.getElementById("signUpForm").addEventListener("submit", async function (event) {
+document
+  .getElementById("signUpForm")
+  .addEventListener("submit", async function (event) {
     event.preventDefault();
     const username = document.getElementById("registerUsername").value;
     const email = document.getElementById("registerEmail").value;
@@ -25,7 +27,9 @@ document.getElementById("signUpForm").addEventListener("submit", async function 
     }
   });
 
-document.getElementById("loginForm").addEventListener("submit", async function (event) {
+document
+  .getElementById("loginForm")
+  .addEventListener("submit", async function (event) {
     event.preventDefault();
     const username = document.getElementById("loginUsername").value;
     const password = document.getElementById("loginPassword").value;

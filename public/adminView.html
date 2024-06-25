@@ -1,60 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin-Panel</title>
     <script src="script/adminView.js"></script>
-    <link rel="stylesheet" href="style/adminView.css">
-</head>
-<body>
+    <link rel="stylesheet" href="style/adminView.css" />
+  </head>
+  <body>
     <nav>
-        <ul id="navList">
-            <li>
-                <a href="#"></a>
-                <img src="images/icon.png" id="logo" alt="Diarriyah Logo">
-            </li>
-            <li class="nav-item"><a href="adminView.html">Admin View</a></li>
-            <li class='nav-item'><a href="/" id="logoutButton">Logout</a></li>
-        </ul>
+      <ul id="navList">
+        <li>
+          <a href="#"></a>
+          <img src="images/icon.png" id="logo" alt="Diarriyah Logo" />
+        </li>
+        <li class="nav-item"><a href="adminView.html">Admin View</a></li>
+        <li class="nav-item"><a href="/" id="logoutButton">Logout</a></li>
+      </ul>
     </nav>
 
-
     <header>
-        <h1>Admin-Panel</h1>
+      <h1>Admin-Panel</h1>
     </header>
     <main>
+      <span id="notification"
+        >This Page is for authorized users only. You are manipulating the
+        database directly!</span
+      >>
 
-        <span id="notification">This Page is for authorized users only. You are manipulating the database
-            directly!</span>>
+      <div id="userListContainer">
+        <!-- Benutzerliste wird hier eingefügt -->
+      </div>
 
-        <div id="userListContainer">
-            <!-- Benutzerliste wird hier eingefügt -->
-        </div>
+      <form id="usernameChangeForm" style="display: none">
+        <label for="newUsername">New Username:</label>
+        <input type="text" id="newUsername" required />
+        <button type="submit">Update Username</button>
+      </form>
 
-        <form id="usernameChangeForm" style="display: none;">
-            <label for="newUsername">New Username:</label>
-            <input type="text" id="newUsername" required>
-            <button type="submit">Update Username</button>
-        </form>
-
-        <form id="passwordChangeForm" style="display: none;">
-            <label for="newPassword">New Password:</label>
-            <input type="password" id="newPassword" required>
-            <button type="submit">Update Password</button>
-        </form>
-
+      <form id="passwordChangeForm" style="display: none">
+        <label for="newPassword">New Password:</label>
+        <input type="password" id="newPassword" required />
+        <button type="submit">Update Password</button>
+      </form>
     </main>
     <footer>
-        <ul>
-          <li>&copy; Dear Diarryah</li>
-          <li>―</li>
-          <li>page by <a href="mailto:admin@diarryah.com">Diarryah project Team</a></li>
-          <li>―</li>
-          <li>Visit us at<a href="https://www.fh-campuswien.ac.at/" target="_blank">UAS Campus Vienna</a></li>
-        </ul>
-      </footer>
-</body>
-
+      <ul>
+        <li>&copy; Dear Diarryah</li>
+        <li>―</li>
+        <li>
+          page by <a href="mailto:admin@diarryah.com">Diarryah project Team</a>
+        </li>
+        <li>―</li>
+        <li>
+          Visit us at<a href="https://www.fh-campuswien.ac.at/" target="_blank"
+            >UAS Campus Vienna</a
+          >
+        </li>
+      </ul>
+    </footer>
+  </body>
 </html>

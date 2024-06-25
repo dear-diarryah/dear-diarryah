@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     window.location.href = "/";
     return;
   }
-  
+
   try {
     const response = await fetch("/getEntries", {
       method: "GET",
@@ -24,30 +24,34 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
     const data = await response.json();
     const entries = data.entries;
-    
+
     displayEntries(entries);
   } catch (error) {
     console.error("Error:", error);
-    alert("Failed to fetch entries, redirecting to landing page. Please log in again.");
+    alert(
+      "Failed to fetch entries, redirecting to landing page. Please log in again."
+    );
     localStorage.removeItem("token");
     window.location.href = "/";
   }
 
-  document.getElementById("logoutButton").addEventListener("click", function (event) {
-    event.preventDefault();
-    localStorage.removeItem("token");
-    // alert("Logged out successfully");
-    window.location.href = "/";
-  });
+  document
+    .getElementById("logoutButton")
+    .addEventListener("click", function (event) {
+      event.preventDefault();
+      localStorage.removeItem("token");
+      // alert("Logged out successfully");
+      window.location.href = "/";
+    });
 
   /*Fetch the fact data from the API using the fetchFact function
    and create an object to hold the fact details if fetch is true*/
   const fact = await fetchFact();
   if (fact) {
     const factObject = {
-        title: "Interesting Fact",
-        date: new Date().toLocaleDateString(), // Setting the current date
-        content: fact.attributes.body,
+      title: "Interesting Fact",
+      date: new Date().toLocaleDateString(), // Setting the current date
+      content: fact.attributes.body,
     };
     displayFact(factObject);
   }
@@ -55,16 +59,16 @@ document.addEventListener("DOMContentLoaded", async function () {
 /*asynchronous function to fetch fact data from  API */
 async function fetchFact() {
   try {
-    const response = await fetch('/api/fact');
+    const response = await fetch("/api/fact");
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.error || 'Error fetching fact');
+      throw new Error(data.error || "Error fetching fact");
     }
     /*return first fact from array, it is also possible to take more facts (change limit in request on server.js) */
     return data.data[0]; // Assuming the fact is in data.data[0]
   } catch (error) {
-    console.error('Error fetching fact:', error);
+    console.error("Error fetching fact:", error);
     return null;
   }
 }
@@ -72,27 +76,27 @@ async function fetchFact() {
 /* for <div id="dailyFactsContainer"></div> in personalView.html */
 function displayFact(fact) {
   const dailyFactsContainer = document.getElementById("dailyFactsContainer");
-  
+
   const factElement = document.createElement("div");
   factElement.classList.add("fact");
   factElement.innerHTML = `<h3>${fact.title} - ${fact.date}</h3><p>${fact.content}</p>`;
   dailyFactsContainer.appendChild(factElement);
 
   const positiveVote = document.createElement("button");
-    positiveVote.classList.add("positiveVoteButton");
-    positiveVote.textContent = "Helpful";
-    factElement.appendChild(positiveVote);
-    positiveVote.addEventListener("click", function () {
-      alert("Thanks for voting!");
-    });
+  positiveVote.classList.add("positiveVoteButton");
+  positiveVote.textContent = "Helpful";
+  factElement.appendChild(positiveVote);
+  positiveVote.addEventListener("click", function () {
+    alert("Thanks for voting!");
+  });
 
-    const negativeVote = document.createElement("button");
-    negativeVote.classList.add("negativeVoteButton");
-    negativeVote.textContent = "Dislike";
-    factElement.appendChild(negativeVote);
-    negativeVote.addEventListener("click", function () {
-      alert("Thanks for voting!");
-    });
+  const negativeVote = document.createElement("button");
+  negativeVote.classList.add("negativeVoteButton");
+  negativeVote.textContent = "Dislike";
+  factElement.appendChild(negativeVote);
+  negativeVote.addEventListener("click", function () {
+    alert("Thanks for voting!");
+  });
 }
 /* ----------------------------------------------------------------- */
 
@@ -133,7 +137,7 @@ function displayEntries(entries) {
     deleteEntry.classList.add("deleteEntry");
     deleteEntry.textContent = "Delete Entry";
     postElement.appendChild(deleteEntry);
-    deleteEntry.addEventListener("click", async function(event) {
+    deleteEntry.addEventListener("click", async function (event) {
       event.preventDefault();
       const entryId = post.id;
       const token = localStorage.getItem("token");
@@ -158,7 +162,7 @@ function displayEntries(entries) {
       } catch (error) {
         console.error("Error:", error);
       }
-    })
+    });
   });
 
   const addButton = document.createElement("button");
@@ -169,32 +173,3 @@ function displayEntries(entries) {
     window.location.href = "/diary.html";
   });
 }
-
-//TODO - create function that automatically adds most recent 3 posts - facebook style
-/*
-reference to Exercise 3
-
-function appendMovie(movie, element) {
-  new ElementBuilder("article").id(movie.imdbID)
-          .append(new ElementBuilder("img").with("src", movie.Poster))
-          .append(new ElementBuilder("h1").text(movie.Title))
-          .append(new ElementBuilder("p")
-              .append(new ElementBuilder("button").text("Edit")
-                    .listener("click", () => location.href = "edit.html?imdbID=" + movie.imdbID)))
-          .append(new ParagraphBuilder().items(
-              "Runtime " + formatRuntime(movie.Runtime),
-              "\u2022",
-              "Released on " +
-                new Date(movie.Released).toLocaleDateString("en-US")))
-          .append(new ParagraphBuilder().childClass("genre").items(movie.Genres))
-          .append(new ElementBuilder("p").text(movie.Plot))
-          .append(new ElementBuilder("h2").pluralizedText("Director", movie.Directors))
-          .append(new ListBuilder().items(movie.Directors))
-          .append(new ElementBuilder("h2").pluralizedText("Writer", movie.Writers))
-          .append(new ListBuilder().items(movie.Writers))
-          .append(new ElementBuilder("h2").pluralizedText("Actor", movie.Actors))
-          .append(new ListBuilder().items(movie.Actors))
-          .appendTo(element);
-}
-*/
-//post element
