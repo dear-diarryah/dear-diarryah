@@ -125,7 +125,7 @@ async function changeUsername(userId) {
   try {
     const token = localStorage.getItem("token");
     const response = await fetch(`/admin/updateUsername/${userId}`, {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         "x-access-token": token,
@@ -176,7 +176,7 @@ async function changePassword(userId) {
   try {
     const token = localStorage.getItem("token");
     const response = await fetch(`/admin/updatePassword/${userId}`, {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         "x-access-token": token,

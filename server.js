@@ -88,7 +88,7 @@ app.get("/admin/getUsers", verifyToken, (req, res) => {
   });
 });
 
-app.put("/admin/updateUsername/:userId", verifyToken, (req, res) => {
+app.patch("/admin/updateUsername/:userId", verifyToken, (req, res) => {
   const userId = req.params.userId;
   const newUsername = req.body.newUsername;
 
@@ -105,7 +105,7 @@ app.put("/admin/updateUsername/:userId", verifyToken, (req, res) => {
   });
 });
 
-app.put("/admin/updatePassword/:userId", verifyToken, (req, res) => {
+app.patch("/admin/updatePassword/:userId", verifyToken, (req, res) => {
   const userId = req.params.userId;
   const newPassword = req.body.newPassword;
   const hashedPassword = bcrypt.hashSync(newPassword, 8);
