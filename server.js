@@ -277,6 +277,25 @@ app.get('/api/fact', async (req, res) => {
   }
 });
 
+// TomTom API Endpoint
+app.get('/api/getTomTomApiKey', (req, res) => {
+  const apiKey = 'V6oxeT1AGqkr1FA1CzGwZoafK2DzASxH'
+  res.json({ apiKey });
+});
+
+app.get('/api/veterinarians', async (req, res) => {
+  const apiKey = 'V6oxeT1AGqkr1FA1CzGwZoafK2DzASxH';
+
+  try {
+    const response = await fetch(`https://api.tomtom.com/search/2/search/veterinarian.json?key=${apiKey}&lat=48.2082&lon=16.3738&radius=15000&limit=50`);
+    const data = await response.json();
+    res.status(200).json(data);
+  } catch (error) {
+    console.error("Error fetching data from TomTom API:", error);
+    res.status(500).json({ error: "Error fetching data from TomTom API" });
+  }
+});
+
 app.listen(port, "0.0.0.0", () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
