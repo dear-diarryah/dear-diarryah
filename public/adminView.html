@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin-Panel</title>
     <script src="script/adminView.js"></script>
-    <link rel="stylesheet" href="style/adminView.css" />
+    <link rel="stylesheet" href="style/adminView.css">
   </head>
   <body>
     <nav>
       <ul id="navList">
         <li>
           <a href="#"></a>
-          <img src="images/icon.png" id="logo" alt="Diarriyah Logo" />
+          <img src="images/icon.png" id="logo" alt="Diarriyah Logo">
         </li>
         <li class="nav-item"><a href="adminView.html">Admin View</a></li>
         <li class="nav-item"><a href="/" id="logoutButton">Logout</a></li>
@@ -25,8 +25,7 @@
     <main>
       <span id="notification"
         >This Page is for authorized users only. You are manipulating the
-        database directly!</span
-      >>
+        database directly!</span>
 
       <div id="userListContainer">
         <!-- Benutzerliste wird hier eingefügt -->
@@ -34,13 +33,13 @@
 
       <form id="usernameChangeForm" style="display: none">
         <label for="newUsername">New Username:</label>
-        <input type="text" id="newUsername" required />
+        <input type="text" id="newUsername" required>
         <button type="submit">Update Username</button>
       </form>
 
       <form id="passwordChangeForm" style="display: none">
         <label for="newPassword">New Password:</label>
-        <input type="password" id="newPassword" required />
+        <input type="password" id="newPassword" required>
         <button type="submit">Update Password</button>
       </form>
     </main>
