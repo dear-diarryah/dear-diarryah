@@ -127,10 +127,10 @@
             <button type="button" id="editButton" onclick="onEditClicked()">
               Edit
             </button>
-            <button type="button" id="saveButton" onclick="onSaveClicked()">
+            <button type="button" id="saveButton" onclick="onSaveClicked()" hidden>
               Save
             </button>
-            <button type="button" id="cancelButton" onclick="onCancelClicked()">
+            <button type="button" id="cancelButton" onclick="onCancelClicked()" hidden>
               Cancel
             </button>
           </div>
@@ -148,9 +148,17 @@
         document.getElementById("rabies").disabled = false;
         document.getElementById("tetanus").disabled = false;
         document.getElementById("borreliose").disabled = false;
+
+        document.getElementById("editButton").hidden = true;
+        document.getElementById("saveButton").hidden = false;
+        document.getElementById("cancelButton").hidden = false;
       }
 
       async function onSaveClicked() {
+        document.getElementById("editButton").hidden = false;
+        document.getElementById("saveButton").hidden = true;
+        document.getElementById("cancelButton").hidden = true;
+
         const token = localStorage.getItem("token");
         if (!token) {
           alert("No token found, please log in first.");
@@ -211,6 +219,10 @@
       }
 
       function onCancelClicked() {
+        document.getElementById("editButton").hidden = false;
+        document.getElementById("saveButton").hidden = true;
+        document.getElementById("cancelButton").hidden = true;
+        
         window.location.href = "./profile.html";
       }
 
