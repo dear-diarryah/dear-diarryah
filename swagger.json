@@ -11,7 +11,7 @@
   "paths": {
     "/signUp": {
       "post": {
-        "tags" : ["Authentication"],
+        "tags": ["Authentication"],
         "summary": "Create a new user account",
         "parameters": [
           {
@@ -36,7 +36,7 @@
     },
     "/login": {
       "post": {
-        "tags" : ["Authentication"],
+        "tags": ["Authentication"],
         "summary": "Login a user",
         "parameters": [
           {
@@ -60,10 +60,10 @@
         }
       }
     },
-    "/getEntries": {
+    "/admin/getUsers": {
       "get": {
-        "tags" : ["Diary Entries"],
-        "summary": "Get all diary entries for a user",
+        "tags": ["Admin"],
+        "summary": "Retrieve all users",
         "parameters": [
           {
             "name": "x-access-token",
@@ -73,15 +73,16 @@
           }
         ],
         "responses": {
-          "200": { "description": "Successful response" },
-          "500": { "description": "Error on the server" }
+          "200": { "description": "List of users" },
+          "403": { "description": "Access forbidden, you are not an admin" },
+          "500": { "description": "Error fetching users" }
         }
       }
     },
-    "/postEntry": {
-      "post": {
-        "tags" : ["Diary Entries"],
-        "summary": "Create a new diary entry",
+    "/admin/updateUsername/:userId": {
+      "patch": {
+        "tags": ["Admin"],
+        "summary": "Update a user's username",
         "parameters": [
           {
             "name": "x-access-token",
@@ -90,52 +91,11 @@
             "type": "string"
           },
           {
-            "name": "body",
-            "in": "body",
+            "name": "userId",
+            "in": "path",
             "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-           "title": {
-                  "type": "string",
-                  "description": "The title of the diary entry"
-                },
-                "date": {
-                  "type": "string",
-                  "description": "The date of the diary entry (format: YYYY-MM-DD)"
-                },
-                "city": {
-                  "type": "string",
-                  "description": "The city associated with the diary entry"
-                },
-                "content": {
-                  "type": "string",
-                  "description": "The content of the diary entry"
-                },
-                "weather": {
-                  "type": "string",
-                  "description": "The weather information for the specified date and city"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": { "description": "Entry posted successfully" },
-          "500": { "description": "Error posting entry" }
-        }
-      }
-    },
-    "/editEntry": {
-      "put": {
-        "tags" : ["Diary Entries"],
-        "summary": "Edit an existing diary entry",
-        "parameters": [
-          {
-            "name": "x-access-token",
-            "in": "header",
-            "required": true,
-            "type": "string"
+            "type": "integer",
+            "description": "ID of the user to update"
           },
           {
             "name": "body",
@@ -144,24 +104,22 @@
             "schema": {
               "type": "object",
               "properties": {
-                "title": { "type": "string" },
-                "date": { "type": "string" },
-                "city": { "type": "string" },
-                "content": { "type": "string" }
+                "newUsername": { "type": "string" }
               }
             }
           }
         ],
         "responses": {
-          "200": { "description": "Entry edited successfully" },
-          "500": { "description": "Error editing entry" }
+          "200": { "description": "Username updated successfully" },
+          "403": { "description": "Access forbidden, you are not an admin" },
+          "500": { "description": "Error updating username" }
         }
       }
     },
-    "/deleteEntry": {
-      "delete": {
-        "tags" : ["Diary Entries"],
-        "summary": "Delete a diary entry",
+    "/admin/updatePassword/:userId": {
+      "patch": {
+        "tags": ["Admin"],
+        "summary": "Update a user's password",
         "parameters": [
           {
             "name": "x-access-token",
@@ -170,24 +128,299 @@
             "type": "string"
           },
           {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID of the user whose password is to be updated"
+          },
+          {
             "name": "body",
             "in": "body",
             "required": true,
             "schema": {
               "type": "object",
               "properties": {
-                "entryId": { "type": "integer" }
+                "newPassword": { "type": "string" }
               }
             }
           }
         ],
-        "responses": {
-          "200": { "description": "Entry deleted successfully" },
-          "404": { "description": "Entry not found or not authorized" },
-          "500": { "description": "Error deleting entry" }
+        "responses": {      "200": { "description": "Password updated successfully" },
+        "403": { "description": "Access forbidden, you are not an admin" },
+        "500": { "description": "Error updating password" }
+      }
+    }
+  },
+  "/admin/deleteUser/:userId": {
+    "delete": {
+      "tags": ["Admin"],
+      "summary": "Delete a user",
+      "parameters": [
+        {
+          "name": "x-access-token",
+          "in": "header",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "type": "integer",
+          "description": "ID of the user to delete"
         }
+      ],
+      "responses": {
+        "200": { "description": "User and their entries deleted successfully" },
+        "403": { "description": "Access forbidden, you are not an admin" },
+        "404": { "description": "User not found or not authorized" },
+        "500": { "description": "Error deleting user" }
+      }
+    }
+  },
+  "/getEntries": {
+    "get": {
+      "tags": ["Diary Entries"],
+      "summary": "Get all diary entries for a user",
+      "parameters": [
+        {
+          "name": "x-access-token",
+          "in": "header",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "responses": {
+        "200": { "description": "Successful response" },
+        "500": { "description": "Error on the server" }
+      }
+    }
+  },
+  "/getEntry/:entryId": {
+    "get": {
+      "tags": ["Diary Entries"],
+      "summary": "Get a specific diary entry",
+      "parameters": [
+        {
+          "name": "x-access-token",
+          "in": "header",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "entryId",
+          "in": "path",
+          "required": true,
+          "type": "integer",
+          "description": "ID of the diary entry to retrieve"
+        }
+      ],
+      "responses": {
+        "200": { "description": "Diary entry retrieved successfully" },
+        "500": { "description": "Error on the server" }
+      }
+    }
+  },
+  "/postEntry": {
+    "post": {
+      "tags": ["Diary Entries"],
+      "summary": "Create a new diary entry",
+      "parameters": [
+        {
+          "name": "x-access-token",
+          "in": "header",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "description": "The title of the diary entry"
+              },
+              "date": {
+                "type": "string",
+                "description": "The date of the diary entry (format: YYYY-MM-DD)"
+              },
+              "city": {
+                "type": "string",
+                "description": "The city associated with the diary entry"
+              },
+              "content": {
+                "type": "string",
+                "description": "The content of the diary entry"
+              },
+              "weather": {
+                "type": "string",
+                "description": "The weather information for the specified date and city"
+              }
+            }
+          }
+        }
+      ],
+      "responses": {
+        "200": { "description": "Entry posted successfully" },
+        "500": { "description": "Error posting entry" }
+      }
+    }
+  },
+  "/editEntry/:entryId": {
+    "put": {
+      "tags": ["Diary Entries"],
+      "summary": "Edit an existing diary entry",
+      "parameters": [
+        {
+          "name": "x-access-token",
+          "in": "header",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "entryId",
+          "in": "path",
+          "required": true,
+          "type": "integer",
+          "description": "ID of the diary entry to edit"
+        },
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "title": { "type": "string" },
+              "date": { "type": "string" },
+              "city": { "type": "string" },
+              "content": { "type": "string" }
+            }
+          }
+        }
+      ], 
+      "responses": {
+        "200": { "description": "Entry edited successfully" },
+        "404": { "description": "Entry not found or not authorized" },
+        "500": { "description": "Error editing entry" }
+      }
+    }
+  },
+  "/deleteEntry": {
+    "delete": {
+      "tags": ["Diary Entries"],
+      "summary": "Delete a diary entry",
+      "parameters": [
+        {
+          "name": "x-access-token",
+          "in": "header",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "entryId": { "type": "integer" }
+            }
+          }
+        }
+      ],
+      "responses": {
+        "200": { "description": "Entry deleted successfully" },
+        "404": { "description": "Entry not found or not authorized" },
+        "500": { "description": "Error deleting entry" }
+      }
+    }
+  },
+  "/updateProfile": {
+    "post": {
+      "tags": ["Profile"],
+      "summary": "Update or create a user profile",
+      "parameters": [
+        {
+          "name": "x-access-token",
+          "in": "header",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "nickname": { "type": "string" },
+              "biography": { "type": "string" },
+              "age": { "type": "integer" },
+              "rabies_date": { "type": "string" },
+              "tetanus_date": { "type": "string" },
+              "borreliose_date": { "type": "string" },
+              "gender": { "type": "string" }
+            }
+          }
+        }
+      ],
+      "responses": {
+        "200": { "description": "Profile updated or created successfully" },
+        "500": { "description": "Error on the server" }
+      }
+    }
+  },
+  "/getProfile": {
+    "get": {
+      "tags": ["Profile"],
+      "summary": "Get the user profile",
+      "parameters": [
+        {
+          "name": "x-access-token",
+          "in": "header",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "responses": {
+        "200": { "description": "Profile retrieved successfully" },
+        "500": { "description": "Error fetching profile" }
+      }
+    }
+  },
+  "/api/fact": {
+    "get": {
+      "tags": ["External APIs"],
+      "summary": "Fetch a random dog fact",
+      "responses": {
+        "200": { "description": "Dog fact retrieved" },
+        "500": { "description": "Error fetching fact data" }
+      }
+    }
+  },
+  "/api/getTomTomApiKey": {
+    "get": {
+      "tags": ["External APIs"],
+      "summary": "Retrieve the API key for TomTom services",
+      "responses": {
+        "200": { "description": "API key provided" }
+      }
+    }
+  },
+  "/api/veterinarians": {
+    "get": {
+      "tags": ["External APIs"],
+      "summary": "Search for veterinarians in a specific area",
+      "responses": {
+        "200": { "description": "List of veterinarians retrieved" },
+        "500": { "description": "Error fetching data from TomTom API" }
       }
     }
   }
 }
-  
+}
