@@ -48,7 +48,7 @@ app.post("/signUp", (req, res) => {
       if (err) {
         return res.status(500).sendFormatted({ error: "Error registering new user" });
       }
-      const token = jwt.sign({ id: this.lastID }, "your_secret_key", {
+      const token = jwt.sign({ id: this.lastID }, "W$vaf!d!7oSD31enlSFo9VEF7oRhBTYagHR2$w-lbk6kgIE+7d1BpV3zXvBTdtYB", {
         expiresIn: 86400,
       });
       res.status(200).sendFormatted({ auth: true, token: token });
@@ -67,7 +67,7 @@ app.post("/login", (req, res) => {
     if (!passwordIsValid)
       return res.status(401).sendFormatted({ auth: false, token: null });
 
-    const token = jwt.sign({ id: user.id, isAdmin: user.isAdmin }, "your_secret_key", {
+    const token = jwt.sign({ id: user.id, isAdmin: user.isAdmin }, "W$vaf!d!7oSD31enlSFo9VEF7oRhBTYagHR2$w-lbk6kgIE+7d1BpV3zXvBTdtYB", {
       expiresIn: 86400,
     });
     res.status(200).sendFormatted({ auth: true, token: token, isAdmin: user.isAdmin });
@@ -307,7 +307,7 @@ function verifyToken(req, res, next) {
   if (!token)
     return res.status(403).sendFormatted({ auth: false, message: "No token provided." });
 
-  jwt.verify(token, "your_secret_key", (err, decoded) => {
+  jwt.verify(token, "W$vaf!d!7oSD31enlSFo9VEF7oRhBTYagHR2$w-lbk6kgIE+7d1BpV3zXvBTdtYB", (err, decoded) => {
     if (err)
       return res.status(500).sendFormatted({ auth: false, message: "Failed to authenticate token." });
 
