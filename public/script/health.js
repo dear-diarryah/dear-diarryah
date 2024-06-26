@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", async function () {
           marker.setPopup(popup);
         });
       } catch (error) {
-        console.error("Fehler bei der Suche:", error);
+        console.error("Error during search: ", error);
       }
     });
 });
