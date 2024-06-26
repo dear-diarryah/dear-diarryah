@@ -53,11 +53,11 @@
             <div class="radio-buttons">
               <div class="radio-container">
                 <label for="male">Male</label>
-                <input type="radio" id="male" name="gender" value="Male" />
+                <input type="radio" id="male" name="gender" value="Male" disabled/>
               </div>
               <div class="radio-container">
                 <label for="female">Female</label>
-                <input type="radio" id="female" name="gender" value="Female" />
+                <input type="radio" id="female" name="gender" value="Female" disabled/>
               </div>
             </div>
           </div>
@@ -83,7 +83,7 @@
               <legend>Vaccinations:</legend>
               <div class="vaccine">
                 <label for="rabies">Rabies:</label>
-                <select id="rabies" name="rabies">
+                <select id="rabies" name="rabies" disabled>
                   <option value="No">No</option>
                   <option value="Yes">Yes</option>
                 </select>
@@ -96,7 +96,7 @@
               </div>
               <div class="vaccine">
                 <label for="tetanus">Tetanus:</label>
-                <select id="tetanus" name="tetanus">
+                <select id="tetanus" name="tetanus" disabled>
                   <option value="No">No</option>
                   <option value="Yes">Yes</option>
                 </select>
@@ -109,7 +109,7 @@
               </div>
               <div class="vaccine">
                 <label for="borreliose">Borreliose:</label>
-                <select id="borreliose" name="borreliose">
+                <select id="borreliose" name="borreliose" disabled>
                   <option value="No">No</option>
                   <option value="Yes">Yes</option>
                 </select>
@@ -143,6 +143,11 @@
         document.getElementById("nickname").disabled = false;
         document.getElementById("biography").disabled = false;
         document.getElementById("age").disabled = false;
+        document.getElementById("male").disabled = false;
+        document.getElementById("female").disabled = false;
+        document.getElementById("rabies").disabled = false;
+        document.getElementById("tetanus").disabled = false;
+        document.getElementById("borreliose").disabled = false;
       }
 
       async function onSaveClicked() {
